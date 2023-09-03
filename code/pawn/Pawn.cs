@@ -67,6 +67,8 @@ public partial class Pawn : AnimatedEntity
 	{
 		SetModel( "models/citizen/citizen.vmdl" );
 
+		this.SetupPhysicsFromModel( PhysicsMotionType.Keyframed, false );
+
 		EnableDrawing = true;
 		EnableHideInFirstPerson = true;
 		EnableShadowInFirstPerson = true;
