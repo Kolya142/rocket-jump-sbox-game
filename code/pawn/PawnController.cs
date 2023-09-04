@@ -47,7 +47,7 @@ public class PawnController : EntityComponent<Pawn>
 			DoJump();
 		}
 
-		if ( Input.Pressed( "reload" ) || Entity.Health <= 0)
+		if ( Input.Pressed( "reload" ) || Entity.LifeState == LifeState.Dead)
 		{
 			Entity.Health = 100f;
 			// Get all of the spawnpoints

@@ -200,4 +200,11 @@ public partial class Pawn : AnimatedEntity
 		EyeRotation = ViewAngles.ToRotation();
 		Rotation = ViewAngles.WithPitch( 0f ).ToRotation();
 	}
+	public override void OnKilled()
+	{
+		if ( LifeState == LifeState.Alive )
+		{
+			LifeState = LifeState.Dead;
+		}
+	}
 }
