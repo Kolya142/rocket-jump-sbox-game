@@ -47,6 +47,11 @@ public class PawnController : EntityComponent<Pawn>
 			DoJump();
 		}
 
+		if ( Input.Down( "flashlight" ) )
+		{
+			DebugOverlay.ScreenText( $"Positon: {Entity.Position}\nRotation: {Entity.Rotation.Forward.x}, {Entity.Rotation.Forward.y}\nVelocity: {Entity.Velocity}\nForce: {Entity.Velocity.Length}\nPlayer Username: {Game.UserName}\nPlayers Count: {Game.Clients.Count}" );
+		}
+
 		if ( Input.Pressed( "reload" ) || Entity.LifeState == LifeState.Dead)
 		{
 			Entity.Health = 100f;
@@ -63,16 +68,17 @@ public class PawnController : EntityComponent<Pawn>
 				tx.Position = tx.Position + Vector3.Up * 50.0f; // raise it up
 				Entity.Transform = tx;
 			}
+			Entity.LifeState = LifeState.Alive;
 		}
 
-		var rt = Trace.Ray( Entity.AimRay, 120f ).StaticOnly().Run();
+		var rt = Trace.Ray( Entity.AimRay, 300f ).StaticOnly().Run();
 
 		if ( rt.Hit )
 		{
-			DebugOverlay.Circle( rt.HitPosition, Entity.EyeRotation, 5f, Color.Red);
+			DebugOverlay.Circle( rt.HitPosition, Entity.EyeRotation, 6f, Color.Red);
 			if ( Input.Released( "attack2" ) )
 			{
-				Entity.Velocity += Entity.EyeRotation.Forward * -500f;
+				Entity.Velocity += Entity.EyeRotation.Backward * 200;
 			}
 		}
 
