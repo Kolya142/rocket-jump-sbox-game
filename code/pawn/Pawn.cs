@@ -1,5 +1,7 @@
 ﻿using Sandbox;
+using System;
 using System.ComponentModel;
+using System.Linq;
 
 namespace MyGame;
 
@@ -83,6 +85,7 @@ public partial class Pawn : AnimatedEntity
 
 	public void Respawn()
 	{
+		this.Health = 100f;
 		Components.Create<PawnController>();
 		Components.Create<PawnAnimator>();
 
@@ -128,6 +131,8 @@ public partial class Pawn : AnimatedEntity
 
 	bool IsThirdPerson { get; set; } = false;
 
+
+
 	public override void FrameSimulate( IClient cl )
 	{
 		SimulateRotation();
@@ -139,6 +144,8 @@ public partial class Pawn : AnimatedEntity
 		{
 			IsThirdPerson = !IsThirdPerson;
 		}
+
+		DebugOverlay.ScreenText("Health: " + Health, new Vector2 ( 20f, Screen.Height - 20f ) );
 
 		if ( IsThirdPerson )
 		{

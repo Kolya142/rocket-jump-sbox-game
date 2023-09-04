@@ -47,9 +47,10 @@ public class PawnController : EntityComponent<Pawn>
 			DoJump();
 		}
 
-		if ( Input.Pressed( "reload" ) )
+		if ( Input.Pressed( "reload" ) || Entity.Health <= 0)
 		{
-
+			if ( Entity.Health <= 0 ) 
+				Entity.Health = 100;
 			// Get all of the spawnpoints
 			var spawnpoints = Sandbox.Entity.All.OfType<SpawnPoint>();
 

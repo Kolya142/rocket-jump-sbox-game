@@ -1,5 +1,20 @@
 Hud
 {
+    pointer-events: none;
+
+    .pointer-visible
+    {
+        pointer-events: all;
+    }
+
+    &.camera-movement
+    {
+        .pointer-visible
+        {
+            pointer-events: none;
+        }
+    }
+
     .header
     {
         left: 128px;
