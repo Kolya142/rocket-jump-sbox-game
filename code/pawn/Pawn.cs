@@ -12,7 +12,7 @@ public partial class Pawn : AnimatedEntity
 
 	[ClientInput]
 	public Vector3 InputDirection { get; set; }
-	
+
 	[ClientInput]
 	public Angles ViewAngles { get; set; }
 
@@ -148,7 +148,7 @@ public partial class Pawn : AnimatedEntity
 			IsThirdPerson = !IsThirdPerson;
 		}
 
-		DebugOverlay.ScreenText("Health: " + Health, new Vector2 ( 20f, Screen.Height - 20f ) );
+		DebugOverlay.ScreenText( "Health: " + Health, new Vector2( 20f, Screen.Height - 20f ) );
 
 		if ( IsThirdPerson )
 		{
@@ -165,7 +165,7 @@ public partial class Pawn : AnimatedEntity
 				.Ignore( this )
 				.Radius( 8 )
 				.Run();
-			
+
 			Camera.FirstPersonViewer = null;
 			Camera.Position = tr.EndPosition;
 		}

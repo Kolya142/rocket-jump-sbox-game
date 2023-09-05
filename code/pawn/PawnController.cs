@@ -60,13 +60,13 @@ public class PawnController : EntityComponent<Pawn>
 		if ( Input.Pressed( "noclip" ) )
 			Entity.noclip = !Entity.noclip;
 
-		if ( Input.Down( "score" ) && Game.IsClient)
+		if ( Input.Down( "score" ) && Game.IsClient )
 		{
 			IClient[] clients = Game.Clients.ToArray();
-			for (int i = 0; i < clients.Length; i++ )
+			for ( int i = 0; i < clients.Length; i++ )
 			{
 				Pawn pawn = clients[i].Pawn as Pawn;
-				DebugOverlay.ScreenText( $"{clients[i].Name} - Killed: {pawn.Killed}, Depths: {pawn.Deaths}, Ping: {clients[i].Ping}", new Vector2(Screen.Width / 2 - 200, 20), i, Color.Green );
+				DebugOverlay.ScreenText( $"{clients[i].Name} - Killed: {pawn.Killed}, Depths: {pawn.Deaths}, Ping: {clients[i].Ping}", new Vector2( Screen.Width / 2 - 200, 20 ), i, Color.Green );
 			}
 		}
 
@@ -95,7 +95,8 @@ public class PawnController : EntityComponent<Pawn>
 				if ( Input.Pressed( "SlotPrev" ) )
 				{
 					Entity.Health -= 10f;
-					if ( Entity.Health < 0 ) {
+					if ( Entity.Health < 0 )
+					{
 						Entity.Health = 0;
 						if ( Entity.LifeState == LifeState.Alive )
 						{
@@ -111,10 +112,20 @@ public class PawnController : EntityComponent<Pawn>
 						Entity.Health = 100;
 				}
 			}
+			/*
+			if ( Input.Pressed( "drop" ) && Game.IsServer)
+			{
+
+				var tr = Trace.Ray( Entity.AimRay, 1000f ).StaticOnly().Run();
+				var bot = new Bot();
+				bot.Respawn();
+				bot.Position = tr.HitPosition;
+			}
+			*/
 		}
 		if ( Input.Pressed( "reload" ) || Entity.LifeState == LifeState.Dead )
 		{
-			
+
 			// Get all of the spawnpoints
 			var spawnpoints = Sandbox.Entity.All.OfType<SpawnPoint>();
 
@@ -133,22 +144,22 @@ public class PawnController : EntityComponent<Pawn>
 				Entity.Health = 100f;
 				Entity.LifeState = LifeState.Alive;
 			}
-			
+
 		}
 
 		var rt = Trace.Ray( Entity.AimRay, 300f ).StaticOnly().Run();
 
 		if ( rt.Hit )
 		{
-			DebugOverlay.Circle( rt.HitPosition, Entity.EyeRotation, 4f, Color.Red);
-			if ( Input.Pressed( "attack2" ) && rjt <= 0f)
+			DebugOverlay.Circle( rt.HitPosition, Entity.EyeRotation, 4f, Color.Red );
+			if ( Input.Pressed( "attack2" ) && rjt <= 0f )
 			{
 				Entity.Velocity += Entity.EyeRotation.Backward * JumpForce * (1 - (rt.Distance / 300f));
 				rjt = 50f;
 			}
 		}
 
-		if (rjt > 0f)
+		if ( rjt > 0f )
 		{
 			rjt -= Time.Delta * 300f;
 			if ( rjt < 0f )

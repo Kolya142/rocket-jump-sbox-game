@@ -155,7 +155,7 @@ public partial class Weapon : AnimatedEntity
 		{
 			tr.Surface.DoBulletImpact( tr );
 
-			if ( !Game.IsServer ) continue;
+			if ( !Game.IsClient ) continue;
 			if ( !tr.Entity.IsValid() ) continue;
 
 			//
@@ -169,8 +169,11 @@ public partial class Weapon : AnimatedEntity
 					.WithWeapon( this );
 
 				tr.Entity.TakeDamage( damageInfo );
-				if ( tr.Entity.LifeState == LifeState.Dead )
-					(Game.LocalClient.Pawn as Pawn).Killed += 1;
+				if ( tr.Entity.IsPawn)
+				{
+					if ( tr.Entity.Health <= 0 )
+						(Game.LocalClient.Pawn as Pawn).Killed += 1;
+				}
 			}
 		}
 	}
