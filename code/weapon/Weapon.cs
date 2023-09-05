@@ -169,6 +169,8 @@ public partial class Weapon : AnimatedEntity
 					.WithWeapon( this );
 
 				tr.Entity.TakeDamage( damageInfo );
+				if ( tr.Entity.LifeState == LifeState.Dead )
+					(Game.LocalClient.Pawn as Pawn).Killed += 1;
 			}
 		}
 	}

@@ -12,6 +12,9 @@ public class PawnController : EntityComponent<Pawn>
 	public int JumpSpeed => 300;
 	public float Gravity => 800f;
 
+	float rjt = 0f;
+	public float JumpForce = 490f;
+
 	HashSet<string> ControllerEvents = new( StringComparer.OrdinalIgnoreCase );
 
 	bool Grounded => Entity.GroundEntity.IsValid();
@@ -24,22 +27,29 @@ public class PawnController : EntityComponent<Pawn>
 		var angles = Entity.ViewAngles.WithPitch( 0 );
 		var moveVector = Rotation.From( angles ) * movement * 320f;
 		var groundEntity = CheckForGround();
-
-		if ( groundEntity.IsValid() )
+		if ( !Entity.noclip )
 		{
-			if ( !Grounded )
+			if ( groundEntity.IsValid() )
 			{
-				Entity.Velocity = Entity.Velocity.WithZ( 0 );
-				AddEvent( "grounded" );
-			}
+				if ( !Grounded )
+				{
+					Entity.Velocity = Entity.Velocity.WithZ( 0 );
+					AddEvent( "grounded" );
+				}
 
-			Entity.Velocity = Accelerate( Entity.Velocity, moveVector.Normal, moveVector.Length, 200.0f * ( Input.Down( "run" ) ? 2.5f : 1f ), 7.5f );
-			Entity.Velocity = ApplyFriction( Entity.Velocity, 4.0f );
+				Entity.Velocity = Accelerate( Entity.Velocity, moveVector.Normal, moveVector.Length, 200.0f * (Input.Down( "run" ) ? 2.5f : 1f), 7.5f );
+				Entity.Velocity = ApplyFriction( Entity.Velocity, 4.0f );
+			}
+			else
+			{
+				Entity.Velocity = Accelerate( Entity.Velocity, moveVector.Normal, moveVector.Length, 100, 20f );
+				Entity.Velocity += Vector3.Down * Gravity * Time.Delta;
+			}
 		}
 		else
 		{
-			Entity.Velocity = Accelerate( Entity.Velocity, moveVector.Normal, moveVector.Length, 100, 20f );
-			Entity.Velocity += Vector3.Down * Gravity * Time.Delta;
+			moveVector = Entity.EyeRotation * movement * 320f;
+			Entity.Position += moveVector * Time.Delta * (Input.Down( "run" ) ? 2.5f : 1f);
 		}
 
 		if ( Input.Pressed( "jump" ) )
@@ -47,14 +57,64 @@ public class PawnController : EntityComponent<Pawn>
 			DoJump();
 		}
 
-		if ( Input.Down( "flashlight" ) )
+		if ( Input.Pressed( "noclip" ) )
+			Entity.noclip = !Entity.noclip;
+
+		if ( Input.Down( "score" ) && Game.IsClient)
 		{
-			DebugOverlay.ScreenText( $"Positon: {Entity.Position}\nRotation: {Entity.Rotation.Forward.x}, {Entity.Rotation.Forward.y}\nVelocity: {Entity.Velocity}\nForce: {Entity.Velocity.Length}\nPlayer Username: {Game.UserName}\nPlayers Count: {Game.Clients.Count}" );
+			IClient[] clients = Game.Clients.ToArray();
+			for (int i = 0; i < clients.Length; i++ )
+			{
+				Pawn pawn = clients[i].Pawn as Pawn;
+				DebugOverlay.ScreenText( $"{clients[i].Name} - Killed: {pawn.Killed}, Depths: {pawn.Deaths}, Ping: {clients[i].Ping}", new Vector2(Screen.Width / 2 - 200, 20), i, Color.Green );
+			}
 		}
 
-		if ( Input.Pressed( "reload" ) || Entity.LifeState == LifeState.Dead)
+		if ( Input.Down( "flashlight" ) )
 		{
-			Entity.Health = 100f;
+			DebugOverlay.ScreenText( $"Positon: {Entity.Position}\nRotation: {Entity.Rotation.Forward.x}, {Entity.Rotation.Forward.y}\nVelocity: {Entity.Velocity}\nForce: {Entity.Velocity.Length}\nPlayer Username: {Game.UserName}\nPlayers Count: {Game.Clients.Count}\nRocket Jump Timer: {rjt}\nNoclipState: {Entity.noclip}\n1 - Rocket Jump Force: {JumpForce}\n2 - Health: {Entity.Health}" );
+
+			if ( Input.Down( "Slot1" ) )
+			{
+				if ( Input.Pressed( "SlotPrev" ) )
+				{
+					JumpForce -= 10f;
+					if ( JumpForce < 0 )
+						JumpForce = 0;
+				}
+				if ( Input.Pressed( "SlotNext" ) )
+				{
+
+					JumpForce += 10f;
+					if ( JumpForce > 1000 )
+						JumpForce = 1000;
+				}
+			}
+			if ( Input.Down( "Slot2" ) )
+			{
+				if ( Input.Pressed( "SlotPrev" ) )
+				{
+					Entity.Health -= 10f;
+					if ( Entity.Health < 0 ) {
+						Entity.Health = 0;
+						if ( Entity.LifeState == LifeState.Alive )
+						{
+							Entity.LifeState = LifeState.Dead;
+						}
+					}
+				}
+				if ( Input.Pressed( "SlotNext" ) )
+				{
+
+					Entity.Health += 10f;
+					if ( Entity.Health > 100 )
+						Entity.Health = 100;
+				}
+			}
+		}
+		if ( Input.Pressed( "reload" ) || Entity.LifeState == LifeState.Dead )
+		{
+			
 			// Get all of the spawnpoints
 			var spawnpoints = Sandbox.Entity.All.OfType<SpawnPoint>();
 
@@ -68,34 +128,49 @@ public class PawnController : EntityComponent<Pawn>
 				tx.Position = tx.Position + Vector3.Up * 50.0f; // raise it up
 				Entity.Transform = tx;
 			}
-			Entity.LifeState = LifeState.Alive;
+			if ( Entity.LifeState == LifeState.Dead )
+			{
+				Entity.Health = 100f;
+				Entity.LifeState = LifeState.Alive;
+			}
+			
 		}
 
 		var rt = Trace.Ray( Entity.AimRay, 300f ).StaticOnly().Run();
 
 		if ( rt.Hit )
 		{
-			DebugOverlay.Circle( rt.HitPosition, Entity.EyeRotation, 6f, Color.Red);
-			if ( Input.Released( "attack2" ) )
+			DebugOverlay.Circle( rt.HitPosition, Entity.EyeRotation, 4f, Color.Red);
+			if ( Input.Pressed( "attack2" ) && rjt <= 0f)
 			{
-				Entity.Velocity += Entity.EyeRotation.Backward * 200;
+				Entity.Velocity += Entity.EyeRotation.Backward * JumpForce * (1 - (rt.Distance / 300f));
+				rjt = 50f;
 			}
 		}
 
-		var mh = new MoveHelper( Entity.Position, Entity.Velocity );
-		mh.Trace = mh.Trace.Size( Entity.Hull ).Ignore( Entity );
-
-		if ( mh.TryMoveWithStep( Time.Delta, StepSize ) > 0 )
+		if (rjt > 0f)
 		{
-			if ( Grounded )
-			{
-				mh.Position = StayOnGround( mh.Position );
-			}
-			Entity.Position = mh.Position;
-			Entity.Velocity = mh.Velocity;
+			rjt -= Time.Delta * 300f;
+			if ( rjt < 0f )
+				rjt = 0f;
 		}
+		if ( !Entity.noclip )
+		{
+			var mh = new MoveHelper( Entity.Position, Entity.Velocity );
+			mh.Trace = mh.Trace.Size( Entity.Hull ).Ignore( Entity );
 
-		Entity.GroundEntity = groundEntity;
+			if ( mh.TryMoveWithStep( Time.Delta, StepSize ) > 0 )
+			{
+				if ( Grounded )
+				{
+					mh.Position = StayOnGround( mh.Position );
+				}
+				Entity.Position = mh.Position;
+				Entity.Velocity = mh.Velocity;
+			}
+
+			Entity.GroundEntity = groundEntity;
+		}
 	}
 
 	void DoJump()

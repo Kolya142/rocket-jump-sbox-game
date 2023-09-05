@@ -16,6 +16,9 @@ public partial class Pawn : AnimatedEntity
 	[ClientInput]
 	public Angles ViewAngles { get; set; }
 
+
+	public bool noclip = false;
+
 	/// <summary>
 	/// Position a player should be looking from in world space.
 	/// </summary>
@@ -62,9 +65,9 @@ public partial class Pawn : AnimatedEntity
 
 	public override Ray AimRay => new Ray( EyePosition, EyeRotation.Forward );
 
-	/// <summary>
-	/// Called when the entity is first created 
-	/// </summary>
+	public int Killed = 0;
+	public int Deaths = 0;
+
 	public override void Spawn()
 	{
 		SetModel( "models/citizen/citizen.vmdl" );
@@ -205,6 +208,7 @@ public partial class Pawn : AnimatedEntity
 		if ( LifeState == LifeState.Alive )
 		{
 			LifeState = LifeState.Dead;
+			Deaths += 1;
 		}
 	}
 }
