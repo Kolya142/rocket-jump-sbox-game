@@ -15,6 +15,8 @@ public partial class Weapon : AnimatedEntity
 	/// </summary>
 	public Pawn Pawn => Owner as Pawn;
 
+	public IClient CClient;
+
 	/// <summary>
 	/// This'll decide which entity to fire effects from. If we're in first person, the View Model, otherwise, this.
 	/// </summary>
@@ -27,6 +29,9 @@ public partial class Weapon : AnimatedEntity
 	/// How often you can shoot this gun.
 	/// </summary>
 	public virtual float PrimaryRate => 5.0f;
+
+	[Net]
+	public int Killed { get; set; }
 
 	/// <summary>
 	/// How long since we last shot this gun.
@@ -154,8 +159,13 @@ public partial class Weapon : AnimatedEntity
 		foreach ( var tr in TraceBullet( pos, pos + forward * 5000, bulletSize ) )
 		{
 			tr.Surface.DoBulletImpact( tr );
-
-			if ( !Game.IsClient ) continue;
+			var damageInfo = DamageInfo.FromBullet( tr.EndPosition, forward * 100 * force, damage )
+					.UsingTraceResult( tr )
+					.WithAttacker( Owner )
+					.WithWeapon( this );
+			if ( tr.Entity.IsPawn && tr.Entity.Health - damageInfo.Damage <= 0 )
+				Pawn.Killed += 1;
+			if ( !Game.IsServer ) continue;
 			if ( !tr.Entity.IsValid() ) continue;
 
 			//
@@ -163,17 +173,7 @@ public partial class Weapon : AnimatedEntity
 			//
 			using ( Prediction.Off() )
 			{
-				var damageInfo = DamageInfo.FromBullet( tr.EndPosition, forward * 100 * force, damage )
-					.UsingTraceResult( tr )
-					.WithAttacker( Owner )
-					.WithWeapon( this );
-
 				tr.Entity.TakeDamage( damageInfo );
-				if ( tr.Entity.IsPawn)
-				{
-					if ( tr.Entity.Health <= 0 )
-						(Game.LocalClient.Pawn as Pawn).Killed += 1;
-				}
 			}
 		}
 	}

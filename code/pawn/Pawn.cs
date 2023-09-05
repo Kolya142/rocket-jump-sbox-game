@@ -16,6 +16,11 @@ public partial class Pawn : AnimatedEntity
 	[ClientInput]
 	public Angles ViewAngles { get; set; }
 
+	[Net]
+	public int Killed { get; set; } = 0;
+	[Net]
+	public int Deaths { get; set; } = 0;
+
 
 	public bool noclip = false;
 
@@ -65,8 +70,10 @@ public partial class Pawn : AnimatedEntity
 
 	public override Ray AimRay => new Ray( EyePosition, EyeRotation.Forward );
 
-	public int Killed = 0;
-	public int Deaths = 0;
+	
+
+	public MBot PBot;
+	public bool botcanmove = false;
 
 	public override void Spawn()
 	{
@@ -105,6 +112,11 @@ public partial class Pawn : AnimatedEntity
 	public override void Simulate( IClient cl )
 	{
 		SimulateRotation();
+		if ( Game.IsClient )
+		{
+			if ( LifeState == LifeState.Dead )
+				Deaths += 1;
+		}
 		Controller?.Simulate( cl );
 		Animator?.Simulate();
 		ActiveWeapon?.Simulate( cl );
@@ -147,6 +159,9 @@ public partial class Pawn : AnimatedEntity
 		{
 			IsThirdPerson = !IsThirdPerson;
 		}
+
+		if (Killed < ActiveWeapon.Killed )
+			Killed = ActiveWeapon.Killed;
 
 		DebugOverlay.ScreenText( "Health: " + Health, new Vector2( 20f, Screen.Height - 20f ) );
 
@@ -209,6 +224,7 @@ public partial class Pawn : AnimatedEntity
 		{
 			LifeState = LifeState.Dead;
 			Deaths += 1;
+			//Game.LocalClient.SetInt( "Deaths", Game.LocalClient.GetInt( "Deaths" ) + 1 );
 		}
 	}
 }

@@ -65,14 +65,13 @@ public class PawnController : EntityComponent<Pawn>
 			IClient[] clients = Game.Clients.ToArray();
 			for ( int i = 0; i < clients.Length; i++ )
 			{
-				Pawn pawn = clients[i].Pawn as Pawn;
-				DebugOverlay.ScreenText( $"{clients[i].Name} - Killed: {pawn.Killed}, Depths: {pawn.Deaths}, Ping: {clients[i].Ping}", new Vector2( Screen.Width / 2 - 200, 20 ), i, Color.Green );
+				DebugOverlay.ScreenText( $"{clients[i].Name} - Killed: {(clients[i].Pawn as Pawn).Killed}, Deaths: {(clients[i].Pawn as Pawn).Deaths}, Ping: {clients[i].Ping}", new Vector2( Screen.Width / 2 - 200, 20 ), i, Color.Green );
 			}
 		}
 
 		if ( Input.Down( "flashlight" ) )
 		{
-			DebugOverlay.ScreenText( $"Positon: {Entity.Position}\nRotation: {Entity.Rotation.Forward.x}, {Entity.Rotation.Forward.y}\nVelocity: {Entity.Velocity}\nForce: {Entity.Velocity.Length}\nPlayer Username: {Game.UserName}\nPlayers Count: {Game.Clients.Count}\nRocket Jump Timer: {rjt}\nNoclipState: {Entity.noclip}\n1 - Rocket Jump Force: {JumpForce}\n2 - Health: {Entity.Health}" );
+			DebugOverlay.ScreenText( $"Positon: {Entity.Position}\nRotation: {Entity.Rotation.Forward.x}, {Entity.Rotation.Forward.y}\nVelocity: {Entity.Velocity}\nForce: {Entity.Velocity.Length}\nPlayer Username: {Game.UserName}\nPlayers Count: {Game.Clients.Count}\nRocket Jump Timer: {rjt}\nNoclipState: {Entity.noclip}\n1 - Rocket Jump Force: {JumpForce}\n2 - Health: {Entity.Health}\n3 - Bot Can Move: {Entity.botcanmove}" );
 
 			if ( Input.Down( "Slot1" ) )
 			{
@@ -112,16 +111,21 @@ public class PawnController : EntityComponent<Pawn>
 						Entity.Health = 100;
 				}
 			}
-			/*
+			if ( Input.Pressed( "Slot3" ) )
+				Entity.botcanmove = !Entity.botcanmove;
 			if ( Input.Pressed( "drop" ) && Game.IsServer)
 			{
-
-				var tr = Trace.Ray( Entity.AimRay, 1000f ).StaticOnly().Run();
-				var bot = new Bot();
-				bot.Respawn();
-				bot.Position = tr.HitPosition;
+				if ( Entity.PBot == null || !Entity.PBot.Client.IsValid )
+				{
+					var tr = Trace.Ray( Entity.AimRay, 1000f ).StaticOnly().Run();
+					MBot.SpawnCustomBot( cl );
+				}
+				else
+				{
+					Entity.PBot.Client.Pawn.Delete();
+					Entity.PBot.Client.Kick();
+				}
 			}
-			*/
 		}
 		if ( Input.Pressed( "reload" ) || Entity.LifeState == LifeState.Dead )
 		{
