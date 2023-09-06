@@ -16,6 +16,8 @@ namespace MyGame;
 /// </summary>
 public partial class MyGame : Sandbox.GameManager
 {
+	[Net]
+	public int gamemode {get; set;}
 	/// <summary>
 	/// Called when the game is created (on both the server and client)
 	/// </summary>
@@ -25,6 +27,13 @@ public partial class MyGame : Sandbox.GameManager
 		{
 			Game.RootPanel = new Hud();
 		}
+	}
+
+	[ConCmd.Admin( "mode" )]
+	public static void TestServerCmd( string parameter )
+	{
+		Log.Info( $"Caller is {ConsoleSystem.Caller} - {parameter}" );
+		(MyGame.Current as MyGame).gamemode = parameter.ToInt();
 	}
 
 	/// <summary>

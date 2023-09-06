@@ -9,6 +9,8 @@ public class MBot : Bot
 
 	float angle = 0;
 
+	float kh = 100f;
+
 	[ConCmd.Admin( "bot_custom", Help = "Spawn my custom bot." )]
 	internal static void SpawnCustomBot( IClient cl )
 	{
@@ -43,12 +45,5 @@ public class MBot : Bot
 		}
 		Input.SetAction( "attack1", getRand() > .6f );
 		( Client.Pawn as Entity).BuildInput();
-	}
-
-	public override void Tick()
-	{
-		// Here we can do something with the bot each tick.
-		// Here we'll print our bot's name every tick.
-		Log.Info( Client.Name );
 	}
 }

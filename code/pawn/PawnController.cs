@@ -12,6 +12,12 @@ public class PawnController : EntityComponent<Pawn>
 	public int JumpSpeed => 300;
 	public float Gravity => 800f;
 
+	AnimatedEntity resultEntity_collect = new();
+
+	AnimatedEntity resultEntityProj_collect = new();
+
+	private bool isInit_collect = true;
+
 	float rjt = 0f;
 	public float JumpForce = 490f;
 
@@ -19,14 +25,65 @@ public class PawnController : EntityComponent<Pawn>
 
 	bool Grounded => Entity.GroundEntity.IsValid();
 
+	private void RandPos_collect()
+	{
+		const float mdist = 10000f;
+		Vector3 HitPosition = new();
+		while ( true )
+		{
+			Vector3 RandPos = new Vector3( new Random().Float( -mdist, mdist ), new Random().Float( -mdist, mdist ), 100000f );
+			var result = Trace.Ray( RandPos, RandPos + Vector3.Down * 100000f ).StaticOnly().Run();
+			HitPosition = result.HitPosition;
+			if ( result.Hit && resultEntity_collect.Position.Distance( HitPosition ) > 100f )
+				break;
+		}
+
+		resultEntity_collect.Position = HitPosition;
+
+	}
+
 	public void Simulate( IClient cl )
 	{
 		ControllerEvents.Clear();
+
+		if ( (MyGame.Current as MyGame).gamemode == 1 && resultEntity_collect.Position.Distance( Entity.Position ) < resultEntity_collect.CollisionBounds.Size.Length * 3f )
+		{
+			Sound.FromEntity( "sounds/collect.sound", Entity );
+			RandPos_collect();
+			Entity.countCollected++;
+		}
+
+		if ( isInit_collect && Game.IsClient && (MyGame.Current as MyGame).gamemode == 1 )
+		{
+			resultEntity_collect.Model = Cloud.Model( "https://asset.party/facepunch/cardboard_box" );
+			resultEntityProj_collect.Model = resultEntity_collect.Model;
+
+			resultEntity_collect.Scale = 1.6f;
+			isInit_collect = false;
+
+			resultEntityProj_collect.Scale = 0.5f;
+			RandPos_collect();
+		}
+		if ( (MyGame.Current as MyGame).gamemode == 1 )
+		{
+			Vector3 direction = resultEntity_collect.Position - Entity.Position;
+			direction = direction.Normal * 40f;
+
+			resultEntityProj_collect.Position = Entity.Position + Vector3.Up * Entity.CollisionBounds.Size.z * Entity.Scale * 0.5f + direction;
+		}
+		if ( (MyGame.Current as MyGame).gamemode == 0 && isInit_collect == false )
+		{
+			isInit_collect = true;
+			resultEntityProj_collect.Delete();
+			resultEntity_collect.Delete();
+		}
 
 		var movement = Entity.InputDirection.Normal;
 		var angles = Entity.ViewAngles.WithPitch( 0 );
 		var moveVector = Rotation.From( angles ) * movement * 320f;
 		var groundEntity = CheckForGround();
+		Entity.Health = Math.Min( Entity.Health + .2f * Time.Delta, 100f );
+
 		if ( !Entity.noclip )
 		{
 			if ( groundEntity.IsValid() )
@@ -158,6 +215,7 @@ public class PawnController : EntityComponent<Pawn>
 			DebugOverlay.Circle( rt.HitPosition, Entity.EyeRotation, 4f, Color.Red );
 			if ( Input.Pressed( "attack2" ) && rjt <= 0f )
 			{
+				Sound.FromWorld( "sounds/hit_hurt2.sound", rt.HitPosition );
 				Entity.Velocity += Entity.EyeRotation.Backward * JumpForce * (1 - (rt.Distance / 300f));
 				rjt = 50f;
 			}
@@ -269,7 +327,6 @@ public class PawnController : EntityComponent<Pawn>
 	{
 		var start = position + Vector3.Up * 2;
 		var end = position + Vector3.Down * StepSize;
-
 		// See how far up we can go without getting stuck
 		var trace = Entity.TraceBBox( position, start );
 		start = trace.EndPosition;

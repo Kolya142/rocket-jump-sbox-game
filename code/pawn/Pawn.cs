@@ -68,6 +68,8 @@ public partial class Pawn : AnimatedEntity
 	[BindComponent] public PawnController Controller { get; }
 	[BindComponent] public PawnAnimator Animator { get; }
 
+	public int countCollected = 0;
+
 	public override Ray AimRay => new Ray( EyePosition, EyeRotation.Forward );
 
 	
@@ -78,6 +80,7 @@ public partial class Pawn : AnimatedEntity
 	public override void Spawn()
 	{
 		SetModel( "models/citizen/citizen.vmdl" );
+
 
 		this.SetupPhysicsFromModel( PhysicsMotionType.Keyframed, false );
 
@@ -160,12 +163,17 @@ public partial class Pawn : AnimatedEntity
 			IsThirdPerson = !IsThirdPerson;
 		}
 
-		if (Killed < ActiveWeapon.Killed )
-			Killed = ActiveWeapon.Killed;
+		if ( (MyGame.Current as MyGame).gamemode == 1 )
+			Health = 100f;
+		String k = "";
 
-		DebugOverlay.ScreenText( "Health: " + Health, new Vector2( 20f, Screen.Height - 20f ) );
+		if ( (MyGame.Current as MyGame).gamemode == 1 )
+			k = $"Collected: {countCollected}";
 
-		if ( IsThirdPerson )
+		DebugOverlay.ScreenText( "Health: " + Health + $"\ncurent mode: {(MyGame.Current as MyGame).gamemode}" + "\n" + k, new Vector2( 20f, Screen.Height - 60f ) );
+		
+
+		if ( IsThirdPerson || (MyGame.Current as MyGame).gamemode == 1)
 		{
 			Vector3 targetPos;
 			var pos = Position + Vector3.Up * 64;
