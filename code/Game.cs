@@ -25,7 +25,7 @@ public partial class MyGame : Sandbox.GameManager
 	{
 		if ( Game.IsClient )
 		{
-			Game.RootPanel = new Hud();
+			_ = new Hud();
 		}
 	}
 

@@ -21,8 +21,8 @@ public partial class Pawn : AnimatedEntity
 	[Net]
 	public int Deaths { get; set; } = 0;
 
-
-	public bool noclip = false;
+	[Net]
+	public bool noclip { get; set; } = false;
 
 	/// <summary>
 	/// Position a player should be looking from in world space.
@@ -72,7 +72,15 @@ public partial class Pawn : AnimatedEntity
 
 	public override Ray AimRay => new Ray( EyePosition, EyeRotation.Forward );
 
-	
+	[ConCmd.Server( "noclip" )]
+	static void DoPlayerNoclip()
+	{
+		if ( ConsoleSystem.Caller.Pawn is Pawn )
+		{
+			Pawn pawn = (ConsoleSystem.Caller.Pawn as Pawn);
+			pawn.noclip = !pawn.noclip;
+		}
+	}
 
 	public MBot PBot;
 	public bool botcanmove = false;
@@ -163,6 +171,7 @@ public partial class Pawn : AnimatedEntity
 			IsThirdPerson = !IsThirdPerson;
 		}
 
+
 		if ( (MyGame.Current as MyGame).gamemode == 1 )
 			Health = 100f;
 		String k = "";
@@ -170,7 +179,7 @@ public partial class Pawn : AnimatedEntity
 		if ( (MyGame.Current as MyGame).gamemode == 1 )
 			k = $"Collected: {countCollected}";
 
-		DebugOverlay.ScreenText( "Health: " + Health + $"\ncurent mode: {(MyGame.Current as MyGame).gamemode}" + "\n" + k, new Vector2( 20f, Screen.Height - 60f ) );
+		// DebugOverlay.ScreenText( "Health: " + Health + $"\ncurent mode: {(MyGame.Current as MyGame).gamemode}" + "\n" + k, new Vector2( 20f, Screen.Height - 60f ) );
 		
 
 		if ( IsThirdPerson || (MyGame.Current as MyGame).gamemode == 1)

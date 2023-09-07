@@ -1,36 +1,48 @@
-Hud
-{
-    pointer-events: none;
+Hud {
+    .header {
+        position: relative;
+        top: 50px;
+        clear: left;
+        flex-direction: column;
+        z-index: 0;
+        margin: 0 auto;
 
-    .pointer-visible
-    {
-        pointer-events: all;
-    }
+        label {
+            font-family: Roboto;
+            color: white;
+            font-size: 20px;
 
-    &.camera-movement
-    {
-        .pointer-visible
-        {
-            pointer-events: none;
+            &.subtitle {
+                font-size: 10px;
+            }
         }
     }
 
-    .header
-    {
-        left: 128px;
-        top: 128px;
-        flex-direction: column;
+    .info {
+        position: absolute;
+        display: flex;
+        flex-direction: row;
+        bottom: 5%;
+        left: 2%;
 
-        label
-        {
+        label {
             font-family: Roboto;
-            color: white;
-            font-size: 32px;
+            font-size: 17px;
+        }
+    }
 
-            &.subtitle
-            {
-                font-size: 16px;
-            }
+    .scoreboard {
+        background-color: rgba(128, 128, 128, 0.3);
+        height: 500px;
+        left: 20px;
+        top: 20px;
+        position: absolute;
+        display: flex;
+        flex-direction: row;
+
+        label {
+            font-family: Roboto;
+            font-size: 18px;
         }
     }
 }

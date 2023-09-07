@@ -1,5 +1,8 @@
 @using Sandbox;
 @using Sandbox.UI;
+@using System;
+@using System.Collections.Generic;
+@using System.Linq;
 
 @namespace MyGame
 @inherits RootPanel
@@ -8,12 +11,39 @@
 <root>
     <ChatBox/>
     <VoiceList/>
+
     <div class="header">
         <label>Rocket Jump Beta</label>
         <label class="subtitle">Control: RMB - jump. R - respawn. tab - score</label>
+    </div>
+    <div class="scoreboard">
+        <label @ref=ScoreBoard></label>
+    </div>
+    <div class="info">
+        <label class="health" @ref=HealthLabel></label>
     </div>
 </root>
 
 @code
 {
+    public Label HealthLabel {get; set;}
+    public Label ScoreBoard {get; set;}
+    public bool showScoreboard {get; set;}
+
+    public override void Tick() {
+        var k = "";
+        if ( (MyGame.Current as MyGame).gamemode == 1 )
+			        k = $"Collected: {(Game.LocalPawn as Pawn).countCollected}";
+        HealthLabel.Text = $"Health: {(Game.LocalPawn as Pawn).Health.ToString("F2")}\nmode: {(MyGame.Current as MyGame).gamemode}\n" + k;
+
+        IClient[] clients = Game.Clients.ToArray();
+        var scoreBoard = "";
+        if ( showScoreboard || true ) {
+	        for ( int i = 0; i < clients.Length; i++ )
+	        {
+		        scoreBoard += $"{clients[i].Name} - Killed: {(clients[i].Pawn as Pawn).Killed}, Deaths: {(clients[i].Pawn as Pawn).Deaths}, Ping: {clients[i].Ping}\n";
+	        }
+        }
+        ScoreBoard.Text = scoreBoard;
+    }
 }

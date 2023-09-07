@@ -71,7 +71,7 @@ public class PawnController : EntityComponent<Pawn>
 
 			resultEntityProj_collect.Position = Entity.Position + Vector3.Up * Entity.CollisionBounds.Size.z * Entity.Scale * 0.5f + direction;
 		}
-		if ( (MyGame.Current as MyGame).gamemode == 0 && isInit_collect == false )
+		if ( (MyGame.Current as MyGame).gamemode != 1 && isInit_collect == false )
 		{
 			isInit_collect = true;
 			resultEntityProj_collect.Delete();
@@ -114,15 +114,13 @@ public class PawnController : EntityComponent<Pawn>
 			DoJump();
 		}
 
-		if ( Input.Pressed( "noclip" ) )
-			Entity.noclip = !Entity.noclip;
-
 		if ( Input.Down( "score" ) && Game.IsClient )
 		{
-			IClient[] clients = Game.Clients.ToArray();
-			for ( int i = 0; i < clients.Length; i++ )
+			IReadOnlyCollection<IClient> clients = Game.Clients;
+			for ( int i = 0; i < clients.Count; i++ )
 			{
-				DebugOverlay.ScreenText( $"{clients[i].Name} - Killed: {(clients[i].Pawn as Pawn).Killed}, Deaths: {(clients[i].Pawn as Pawn).Deaths}, Ping: {clients[i].Ping}", new Vector2( Screen.Width / 2 - 200, 20 ), i, Color.Green );
+				var client = clients.ElementAt( i );
+				DebugOverlay.ScreenText( $"{client.Name} - Killed: {(client.Pawn as Pawn).Killed}, Deaths: {(client.Pawn as Pawn).Deaths}, Ping: {client.Ping}", new Vector2( Screen.Width / 2 - 200, 20 ), i, Color.Green );
 			}
 		}
 

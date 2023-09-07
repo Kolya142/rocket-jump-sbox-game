@@ -205,11 +205,6 @@
           "Name": "Chat",
           "KeyboardCode": "enter",
           "GroupName": "Other"
-        },
-        {
-          "Name": "Noclip",
-          "KeyboardCode": "b",
-          "GroupName": "Other"
         }
       ]
     }
