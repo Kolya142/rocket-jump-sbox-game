@@ -18,8 +18,12 @@ public partial class Pawn : AnimatedEntity
 
 	[Net]
 	public int Killed { get; set; } = 0;
-	[Net, Change]
+	[Net]
 	public int Deaths { get; set; } = 0;
+
+	[Net]
+	public int gg { get; set; } = 0;
+	public bool ggn { get; set; }
 
 	[Net]
 	public bool noclip { get; set; } = false;
@@ -48,12 +52,6 @@ public partial class Pawn : AnimatedEntity
 	{
 		get => Transform.RotationToWorld( EyeLocalRotation );
 		set => EyeLocalRotation = Transform.RotationToLocal( value );
-	}
-
-	public void OnDeathsChanged()
-	{
-		if ( Game.IsClient )
-			Sandbox.Services.Stats.Increment( "kils", 1 );
 	}
 
 	/// <summary>
@@ -176,6 +174,14 @@ public partial class Pawn : AnimatedEntity
 		{
 			IsThirdPerson = !IsThirdPerson;
 		}
+		if ( Game.IsClient && gg == 1 )
+		{
+			Sandbox.Services.Stats.Increment( "kils", 1 );
+			gg = 0;
+		}
+
+		if (noclip != ggn && Game.IsClient)
+			Sandbox.Services.Stats.Increment( "spj2401", 1 );
 
 
 		if ( (MyGame.Current as MyGame).gamemode == 1 )
@@ -247,6 +253,7 @@ public partial class Pawn : AnimatedEntity
 		{
 			LifeState = LifeState.Dead;
 			Deaths += 1;
+			gg = 1;
 			//Game.LocalClient.SetInt( "Deaths", Game.LocalClient.GetInt( "Deaths" ) + 1 );
 		}
 	}
