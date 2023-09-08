@@ -17,7 +17,7 @@ namespace MyGame;
 public partial class MyGame : Sandbox.GameManager
 {
 	[Net]
-	public int gamemode {get; set;}
+	public int gamemode { get; set; }
 	/// <summary>
 	/// Called when the game is created (on both the server and client)
 	/// </summary>
@@ -64,4 +64,3 @@ public partial class MyGame : Sandbox.GameManager
 		}
 	}
 }
-

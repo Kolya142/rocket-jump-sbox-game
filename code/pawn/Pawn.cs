@@ -18,7 +18,7 @@ public partial class Pawn : AnimatedEntity
 
 	[Net]
 	public int Killed { get; set; } = 0;
-	[Net]
+	[Net, Change]
 	public int Deaths { get; set; } = 0;
 
 	[Net]
@@ -48,6 +48,12 @@ public partial class Pawn : AnimatedEntity
 	{
 		get => Transform.RotationToWorld( EyeLocalRotation );
 		set => EyeLocalRotation = Transform.RotationToLocal( value );
+	}
+
+	public void OnDeathsChanged()
+	{
+		if ( Game.IsClient )
+			Sandbox.Services.Stats.Increment( "kils", 1 );
 	}
 
 	/// <summary>
@@ -180,9 +186,9 @@ public partial class Pawn : AnimatedEntity
 			k = $"Collected: {countCollected}";
 
 		// DebugOverlay.ScreenText( "Health: " + Health + $"\ncurent mode: {(MyGame.Current as MyGame).gamemode}" + "\n" + k, new Vector2( 20f, Screen.Height - 60f ) );
-		
 
-		if ( IsThirdPerson || (MyGame.Current as MyGame).gamemode == 1)
+
+		if ( IsThirdPerson || (MyGame.Current as MyGame).gamemode == 1 )
 		{
 			Vector3 targetPos;
 			var pos = Position + Vector3.Up * 64;

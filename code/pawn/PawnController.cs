@@ -168,7 +168,7 @@ public class PawnController : EntityComponent<Pawn>
 			}
 			if ( Input.Pressed( "Slot3" ) )
 				Entity.botcanmove = !Entity.botcanmove;
-			if ( Input.Pressed( "drop" ) && Game.IsServer)
+			if ( Input.Pressed( "drop" ) && Game.IsServer )
 			{
 				if ( Entity.PBot == null || !Entity.PBot.Client.IsValid )
 				{
@@ -216,6 +216,8 @@ public class PawnController : EntityComponent<Pawn>
 				Sound.FromWorld( "sounds/hit_hurt2.sound", rt.HitPosition );
 				Entity.Velocity += Entity.EyeRotation.Backward * JumpForce * (1 - (rt.Distance / 300f));
 				rjt = 50f;
+				if ( Game.IsClient ) 
+					Sandbox.Services.Stats.Increment( "jum", 1 );
 			}
 		}
 
@@ -303,7 +305,7 @@ public class PawnController : EntityComponent<Pawn>
 
 		if ( addspeed <= 0 )
 			return input;
-
+		
 		var accelspeed = acceleration * Time.Delta * wishspeed;
 
 		if ( accelspeed > addspeed )
