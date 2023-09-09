@@ -30,6 +30,19 @@ Hud {
         }
     }
 
+    .Velocity {
+        position: absolute;
+        display: flex;
+        flex-direction: row;
+        bottom: 5%;
+        left: 45%;
+
+        label {
+            font-family: Roboto;
+            font-size: 20px;
+        }
+    }
+
     .scoreboard {
         background-color: rgba(128, 128, 128, 0.3);
         height: 500px;

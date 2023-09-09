@@ -11,15 +11,13 @@ public class PawnController : EntityComponent<Pawn>
 	public int GroundAngle => 45;
 	public int JumpSpeed => 300;
 	public float Gravity => 800f;
-
 	AnimatedEntity resultEntity_collect = new();
-
 	AnimatedEntity resultEntityProj_collect = new();
 
 	private bool isInit_collect = true;
 
 	float rjt = 0f;
-	public float JumpForce = 490f;
+	public float JumpForce = 800f;
 
 	HashSet<string> ControllerEvents = new( StringComparer.OrdinalIgnoreCase );
 
@@ -37,9 +35,7 @@ public class PawnController : EntityComponent<Pawn>
 			if ( result.Hit && resultEntity_collect.Position.Distance( HitPosition ) > 100f )
 				break;
 		}
-
 		resultEntity_collect.Position = HitPosition;
-
 	}
 
 	public void Simulate( IClient cl )
@@ -109,11 +105,11 @@ public class PawnController : EntityComponent<Pawn>
 			Entity.Position += moveVector * Time.Delta * (Input.Down( "run" ) ? 2.5f : 1f);
 		}
 
-		if ( Input.Pressed( "jump" ) )
+		if ( Input.Pressed( "jump" ) && !Entity.noclip )
 		{
 			DoJump();
 		}
-
+		/*
 		if ( Input.Down( "score" ) && Game.IsClient )
 		{
 			IReadOnlyCollection<IClient> clients = Game.Clients;
@@ -123,6 +119,7 @@ public class PawnController : EntityComponent<Pawn>
 				DebugOverlay.ScreenText( $"{client.Name} - Killed: {(client.Pawn as Pawn).Killed}, Deaths: {(client.Pawn as Pawn).Deaths}, Ping: {client.Ping}", new Vector2( Screen.Width / 2 - 200, 20 ), i, Color.Green );
 			}
 		}
+		*/
 
 		if ( Input.Down( "flashlight" ) )
 		{
@@ -206,15 +203,15 @@ public class PawnController : EntityComponent<Pawn>
 
 		}
 
-		var rt = Trace.Ray( Entity.AimRay, 300f ).StaticOnly().Run();
+		var rt = Trace.Ray( Entity.AimRay, 500f ).StaticOnly().Run();
 
 		if ( rt.Hit )
 		{
 			DebugOverlay.Circle( rt.HitPosition, Entity.EyeRotation, 4f, Color.Red );
-			if ( Input.Pressed( "attack2" ) && rjt <= 0f )
+			if ( Input.Pressed( "attack2" ) && rjt <= 0f && !Entity.noclip )
 			{
 				Sound.FromWorld( "sounds/hit_hurt2.sound", rt.HitPosition );
-				Entity.Velocity += Entity.EyeRotation.Backward * JumpForce * (1 - (rt.Distance / 300f));
+				Entity.Velocity += Entity.EyeRotation.Backward * JumpForce * (1 - (rt.Distance / 500f));
 				rjt = 50f;
 				if ( Game.IsClient ) 
 					Sandbox.Services.Stats.Increment( "jum", 1 );

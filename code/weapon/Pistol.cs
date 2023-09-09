@@ -22,7 +22,7 @@ public partial class Pistol : Weapon
 	{
 		ShootEffects();
 		Pawn.PlaySound( "rust_pistol.shoot" );
-		ShootBullet( 0.1f, 100, 20, 1 );
+		ShootBullet( 0.04f, 100, 25, 5 );
 	}
 
 	protected override void Animate()

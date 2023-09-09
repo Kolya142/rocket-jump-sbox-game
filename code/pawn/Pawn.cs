@@ -28,6 +28,8 @@ public partial class Pawn : AnimatedEntity
 	[Net]
 	public bool noclip { get; set; } = false;
 
+	public bool scoreboard { get; set; } = false;
+
 	/// <summary>
 	/// Position a player should be looking from in world space.
 	/// </summary>
@@ -174,6 +176,7 @@ public partial class Pawn : AnimatedEntity
 		{
 			IsThirdPerson = !IsThirdPerson;
 		}
+		scoreboard = Input.Down( "score" );
 		if ( Game.IsClient && gg == 1 )
 		{
 			Sandbox.Services.Stats.Increment( "kils", 1 );
