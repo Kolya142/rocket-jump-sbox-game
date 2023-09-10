@@ -185,10 +185,6 @@ public partial class Pawn : AnimatedEntity
 
 		if (noclip != ggn && Game.IsClient)
 			Sandbox.Services.Stats.Increment( "spj2401", 1 );
-
-
-		if ( (MyGame.Current as MyGame).gamemode == 1 )
-			Health = 100f;
 		String k = "";
 
 		if ( (MyGame.Current as MyGame).gamemode == 1 )

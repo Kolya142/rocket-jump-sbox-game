@@ -18,6 +18,9 @@ public partial class MyGame : Sandbox.GameManager
 {
 	[Net]
 	public int gamemode { get; set; }
+	public IClient curruntOwner_rolled { get; set; }
+	public float timer_rolled { get; set; }
+	public bool is_init_rolled { get; set; }
 	/// <summary>
 	/// Called when the game is created (on both the server and client)
 	/// </summary>
@@ -61,6 +64,21 @@ public partial class MyGame : Sandbox.GameManager
 			var tx = randomSpawnPoint.Transform;
 			tx.Position = tx.Position + Vector3.Up * 50.0f; // raise it up
 			pawn.Transform = tx;
+		}
+	}
+	
+	public override void Simulate( IClient cl )
+	{
+		base.Simulate( cl );
+		if ( gamemode == 3 )
+		{
+			if ( Time.Now - timer_rolled > 60 || is_init_rolled )
+			{
+				timer_rolled = Time.Now;
+				curruntOwner_rolled = Game.Clients.ElementAt( (int)Game.Random.NextInt64( Game.Clients.Count ) );
+			}
+			if ( is_init_rolled )
+				is_init_rolled = false;
 		}
 	}
 }

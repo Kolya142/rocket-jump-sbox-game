@@ -16,6 +16,9 @@
         <label>Rocket Jump Beta</label>
         <label class="subtitle">Control: RMB - jump. R - respawn. tab - score</label>
     </div>
+    <div class="jump">
+        <label @ref=JumpLabel></label>
+    </div>
     <div class="scoreboard">
         <label @ref=ScoreBoard></label>
     </div>
@@ -25,11 +28,13 @@
     <div class="Velocity">
         <label @ref=Velocity></label>
     </div>
+    <div class="crosshair"></div>
 </root>
 
 @code
 {
     public Label HealthLabel {get; set;}
+    public Label JumpLabel {get; set;}
     public Label Velocity {get; set;}
     public Label ScoreBoard {get; set;}
 
@@ -54,7 +59,7 @@
         HealthLabel.Text = $"Health: {health}\nmode: {(MyGame.Current as MyGame).gamemode}\n" + k;
 
         var scoreBoard = "";
-        if ( pawn.scoreboard ) {
+        if ( pawn.scoreboard || (MyGame.Current as MyGame).gamemode == 2 ) {
 	        for ( int i = 0; i < clients.Length; i++ )
 	        {
 		        scoreBoard += $"{clients[i].Name} - Killed: {(clients[i].Pawn as Pawn).Killed}, Deaths: {(clients[i].Pawn as Pawn).Deaths}, Velocity: {(clients[i].Pawn as Pawn).Velocity.Length.ToString("F2")}, Ping: {clients[i].Ping}\n";

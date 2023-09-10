@@ -78,11 +78,11 @@ public class PawnController : EntityComponent<Pawn>
 		var angles = Entity.ViewAngles.WithPitch( 0 );
 		var moveVector = Rotation.From( angles ) * movement * 320f;
 		var groundEntity = CheckForGround();
-		Entity.Health = Math.Min( Entity.Health + .2f * Time.Delta, 100f );
+		Entity.Health = Math.Min( Entity.Health + .2f * Time.Delta * ((MyGame.Current as MyGame).gamemode == 2 ? 3 : 1), 100f );
 
 		if ( !Entity.noclip )
 		{
-			if ( groundEntity.IsValid() )
+			if ( groundEntity.IsValid()  )
 			{
 				if ( !Grounded )
 				{
@@ -96,7 +96,9 @@ public class PawnController : EntityComponent<Pawn>
 			else
 			{
 				Entity.Velocity = Accelerate( Entity.Velocity, moveVector.Normal, moveVector.Length, 100, 20f );
-				Entity.Velocity += Vector3.Down * Gravity * Time.Delta;
+				var gm3 = (MyGame.Current as MyGame).gamemode == 3 && (MyGame.Current as MyGame).curruntOwner_rolled != null;
+				var g = gm3 ? ((MyGame.Current as MyGame).curruntOwner_rolled.Pawn as Pawn).EyeRotation.Forward : Vector3.Down; 
+				Entity.Velocity += g * Gravity * Time.Delta;
 			}
 		}
 		else
@@ -211,10 +213,10 @@ public class PawnController : EntityComponent<Pawn>
 			if ( Input.Pressed( "attack2" ) && rjt <= 0f && !Entity.noclip )
 			{
 				Sound.FromWorld( "sounds/hit_hurt2.sound", rt.HitPosition );
-				Entity.Velocity += Entity.EyeRotation.Backward * JumpForce * (1 - (rt.Distance / 500f));
+				Entity.Velocity += Entity.EyeRotation.Backward * ((MyGame.Current as MyGame).gamemode == 2 ? 430 : JumpForce) * (1 - (rt.Distance / 500f));
 				rjt = 50f;
-				if ( Game.IsClient ) 
-					Sandbox.Services.Stats.Increment( "jum", 1 );
+				if ( Game.IsClient )
+					Sandbox.Services.Stats.Increment( Game.LocalClient, "jump", 1 );
 			}
 		}
 
@@ -255,8 +257,9 @@ public class PawnController : EntityComponent<Pawn>
 	{
 		if ( Entity.Velocity.z > 100f )
 			return null;
-
-		var trace = Entity.TraceBBox( Entity.Position, Entity.Position + Vector3.Down, 2f );
+		var gm3 = (MyGame.Current as MyGame).gamemode == 3 && (MyGame.Current as MyGame).curruntOwner_rolled != null;
+		var g = gm3 ? ((MyGame.Current as MyGame).curruntOwner_rolled.Pawn as Pawn).EyeRotation.Forward : Vector3.Down;
+		var trace = Entity.TraceBBox( Entity.Position, Entity.Position + g, 2f );
 
 		if ( !trace.Hit )
 			return null;

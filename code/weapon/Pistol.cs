@@ -22,7 +22,8 @@ public partial class Pistol : Weapon
 	{
 		ShootEffects();
 		Pawn.PlaySound( "rust_pistol.shoot" );
-		ShootBullet( 0.04f, 100, 25, 5 );
+		ShootBullet( 0.04f, 100, ((MyGame.Current as MyGame).gamemode == 2 ? 52 : 25), 5 );
+		Game.SetRandomSeed( Time.Tick + 25 - (MyGame.Current as MyGame).gamemode );
 	}
 
 	protected override void Animate()

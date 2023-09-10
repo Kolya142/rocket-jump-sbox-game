@@ -17,6 +17,24 @@ Hud {
         }
     }
 
+    .jump {
+        right: 20px;
+        top: 20px;
+        position: absolute;
+        display: flex;
+        flex-direction: row;
+
+        label {
+            font-family: Roboto;
+            color: white;
+            font-size: 20px;
+
+            &.subtitle {
+                font-size: 10px;
+            }
+        }
+    }
+
     .info {
         position: absolute;
         display: flex;
@@ -57,4 +75,13 @@ Hud {
             font-size: 18px;
         }
     }
+}
+.crosshair {
+    background-color: rgba(0, 0, 0, 0.5);
+    height: 15px;
+    width: 15px;
+    left: 50%;
+    top: 50%;
+    position: absolute;
+    transform: translate(-50%, -50%);
 }
