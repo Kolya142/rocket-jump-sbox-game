@@ -80,7 +80,7 @@ public class PawnController : EntityComponent<Pawn>
 		var groundEntity = CheckForGround();
 		Entity.Health = Math.Min( Entity.Health + .2f * Time.Delta * ((MyGame.Current as MyGame).gamemode == 2 ? 3 : 1), 100f );
 
-		if ( !Entity.noclip )
+		if ( !Entity.noclip && !(Entity.GetWaterLevel() >= 0.5f) )
 		{
 			if ( groundEntity.IsValid()  )
 			{
@@ -97,14 +97,16 @@ public class PawnController : EntityComponent<Pawn>
 			{
 				Entity.Velocity = Accelerate( Entity.Velocity, moveVector.Normal, moveVector.Length, 100, 20f );
 				var gm3 = (MyGame.Current as MyGame).gamemode == 3 && (MyGame.Current as MyGame).curruntOwner_rolled != null;
-				var g = gm3 ? ((MyGame.Current as MyGame).curruntOwner_rolled.Pawn as Pawn).EyeRotation.Forward : Vector3.Down; 
+				gm3 = gm3 && (MyGame.Current as MyGame).curruntOwner_rolled.IsValid();
+				var g = gm3 ? ((MyGame.Current as MyGame).curruntOwner_rolled.Pawn as Pawn).EyeRotation.Forward : Vector3.Down;
 				Entity.Velocity += g * Gravity * Time.Delta;
 			}
 		}
 		else
 		{
 			moveVector = Entity.EyeRotation * movement * 320f;
-			Entity.Position += moveVector * Time.Delta * (Input.Down( "run" ) ? 2.5f : 1f);
+			Entity.Velocity = Accelerate( Entity.Velocity, moveVector.Normal, moveVector.Length, 200.0f * (Input.Down( "run" ) ? 2.5f : 1f), 7.5f );
+			Entity.Velocity = ApplyFriction( Entity.Velocity, 4.0f );
 		}
 
 		if ( Input.Pressed( "jump" ) && !Entity.noclip )
@@ -242,6 +244,10 @@ public class PawnController : EntityComponent<Pawn>
 			}
 
 			Entity.GroundEntity = groundEntity;
+		}
+		else
+		{
+			Entity.Position += Entity.Velocity * 0.1f;
 		}
 	}
 

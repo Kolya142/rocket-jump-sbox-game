@@ -1,4 +1,5 @@
 ﻿using Sandbox;
+using Sandbox.Component;
 using System;
 using System.ComponentModel;
 using System.Linq;
@@ -29,6 +30,9 @@ public partial class Pawn : AnimatedEntity
 	public bool noclip { get; set; } = false;
 
 	public bool scoreboard { get; set; } = false;
+
+	[ClientInput]
+	public float DuckLevel { get; set; } = 0;
 
 	/// <summary>
 	/// Position a player should be looking from in world space.
@@ -62,14 +66,11 @@ public partial class Pawn : AnimatedEntity
 	[Net, Predicted, Browsable( false )]
 	public Rotation EyeLocalRotation { get; set; }
 
-	public BBox Hull
-	{
-		get => new
+	public BBox Hull = new
 		(
 			new Vector3( -16, -16, 0 ),
 			new Vector3( 16, 16, 64 )
 		);
-	}
 
 	[BindComponent] public PawnController Controller { get; }
 	[BindComponent] public PawnAnimator Animator { get; }
@@ -183,6 +184,18 @@ public partial class Pawn : AnimatedEntity
 			gg = 0;
 		}
 
+		Hull.Maxs.z = 64 - DuckLevel * 10;
+
+		if ( Input.Down( "duck" ) )
+			DuckLevel = Math.Min(4, DuckLevel + Time.Delta * 5);
+		else
+			DuckLevel = 0;
+		// DebugOverlay.Box( Hull.Mins + Position, Hull.Maxs + Position );
+		var p = EyePosition;
+		p.z = Position.z + Hull.Maxs.z;
+		EyePosition = p;
+		EyeLocalPosition = p - Position;
+
 		if (noclip != ggn && Game.IsClient)
 			Sandbox.Services.Stats.Increment( "spj2401", 1 );
 		String k = "";
@@ -196,7 +209,7 @@ public partial class Pawn : AnimatedEntity
 		if ( IsThirdPerson || (MyGame.Current as MyGame).gamemode == 1 )
 		{
 			Vector3 targetPos;
-			var pos = Position + Vector3.Up * 64;
+			var pos = EyePosition + Vector3.Up * 16;
 			var rot = Camera.Rotation * Rotation.FromAxis( Vector3.Up, -16 );
 
 			float distance = 80.0f * Scale;
