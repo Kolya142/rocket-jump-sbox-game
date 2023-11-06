@@ -72,7 +72,7 @@ public partial class MyGame : Sandbox.GameManager
 		base.Simulate( cl );
 		if ( gamemode == 3 )
 		{
-			if ( Time.Now - timer_rolled > 60 || is_init_rolled )
+			if ( Time.Now - timer_rolled > 10 || is_init_rolled )
 			{
 				timer_rolled = Time.Now;
 				curruntOwner_rolled = Game.Clients.ElementAt( (int)Game.Random.NextInt64( Game.Clients.Count ) );

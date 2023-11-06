@@ -82,7 +82,7 @@ public class PawnController : EntityComponent<Pawn>
 
 		if ( !Entity.noclip && !(Entity.GetWaterLevel() >= 0.5f) )
 		{
-			if ( groundEntity.IsValid()  )
+			if ( groundEntity.IsValid() )
 			{
 				if ( !Grounded )
 				{
@@ -207,18 +207,28 @@ public class PawnController : EntityComponent<Pawn>
 
 		}
 
-		var rt = Trace.Ray( Entity.AimRay, 500f ).StaticOnly().Run();
+		var rt = Trace.Ray( new Ray( Entity.AimRay.Position, Entity.AimRay.Forward - Entity.Velocity.Normal / 30 ), 500f ).Ignore( Entity ).Run();
 
 		if ( rt.Hit )
 		{
 			DebugOverlay.Circle( rt.HitPosition, Entity.EyeRotation, 4f, Color.Red );
-			if ( Input.Pressed( "attack2" ) && rjt <= 0f && !Entity.noclip )
+			if ( Input.Pressed( "attack2" ) && rjt <= 0f && !Entity.noclip)
 			{
 				Sound.FromWorld( "sounds/hit_hurt2.sound", rt.HitPosition );
-				Entity.Velocity += Entity.EyeRotation.Backward * ((MyGame.Current as MyGame).gamemode == 2 ? 430 : JumpForce) * (1 - (rt.Distance / 500f));
-				rjt = 50f;
+				float r = ((MyGame.Current as MyGame).gamemode == 2 ? 430 : JumpForce) * (1 - (rt.Distance / 500f));
+				Entity.Velocity += Entity.EyeRotation.Backward * r;
+				//rjt = 50f;
 				if ( Game.IsClient )
 					Sandbox.Services.Stats.Increment( Game.LocalClient, "jump", 1 );
+				var tr = Trace.Ray( new Ray( Entity.AimRay.Position, Entity.AimRay.Forward - Entity.Velocity.Normal / 30 ), 500f ).DynamicOnly().Ignore(Entity).Run();
+				if ( Game.IsServer && tr.Entity.IsValid() )
+				{
+					DamageInfo damginf = DamageInfo.FromExplosion(rt.HitPosition, r, 400);
+					using ( Prediction.Off() )
+					{
+						tr.Entity.TakeDamage( damginf );
+					}
+				}
 			}
 		}
 
@@ -312,7 +322,7 @@ public class PawnController : EntityComponent<Pawn>
 		if ( addspeed <= 0 )
 			return input;
 		
-		var accelspeed = acceleration * Time.Delta * wishspeed;
+		var accelspeed = acceleration * Time.Delta * wishspeed * 1.2f;
 
 		if ( accelspeed > addspeed )
 			accelspeed = addspeed;

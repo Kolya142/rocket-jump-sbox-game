@@ -1,5 +1,6 @@
 using Sandbox;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MyGame;
 
@@ -24,6 +25,7 @@ public partial class Weapon : AnimatedEntity
 
 	public virtual string ViewModelPath => null;
 	public virtual string ModelPath => null;
+	public int ammo = 25;
 
 	/// <summary>
 	/// How often you can shoot this gun.
@@ -43,6 +45,7 @@ public partial class Weapon : AnimatedEntity
 		EnableHideInFirstPerson = true;
 		EnableShadowInFirstPerson = true;
 		EnableDrawing = false;
+		Tags.Add( "weapon" );
 
 		if ( ModelPath != null )
 		{
@@ -78,6 +81,7 @@ public partial class Weapon : AnimatedEntity
 	public override void Simulate( IClient player )
 	{
 		Animate();
+		ReloadSimul();
 
 		if ( CanPrimaryAttack() )
 		{
@@ -107,6 +111,9 @@ public partial class Weapon : AnimatedEntity
 	/// Called when your gun shoots.
 	/// </summary>
 	public virtual void PrimaryAttack()
+	{
+	}
+	public virtual void ReloadSimul()
 	{
 	}
 
@@ -163,6 +170,7 @@ public partial class Weapon : AnimatedEntity
 					.UsingTraceResult( tr )
 					.WithAttacker( Owner )
 					.WithWeapon( this );
+			
 			if ( tr.Entity.IsPawn && tr.Entity.Health - damageInfo.Damage <= 0 )
 				Pawn.Killed += 1;
 			if ( !Game.IsServer ) continue;
