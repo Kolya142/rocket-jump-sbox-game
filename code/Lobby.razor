@@ -1,0 +1,165 @@
+﻿﻿@using System
+@using System.Collections.Generic
+@using System.Text.Json.Nodes;
+@using System.Linq
+@using System.Threading.Tasks
+@using Sandbox;
+@using Sandbox.Network;
+@using Sandbox.Services;
+@using Sandbox.Utility;
+@inherits PanelComponent
+
+<root>
+	
+	<div class="center">
+		<div class="leaderboard">
+			<p>
+				YouStat: @MyValue
+			</p>
+			<div class="anotherboard">
+				@foreach ( var stat in players )
+				{
+					<p>
+						@stat.DisplayName - @stat.Value
+					</p>
+				}
+			</div>
+		</div>
+	</div>
+		<div class="left">
+			<div class="title">
+				Sandbox
+			</div>
+
+			<div class="explanation">
+				<p>
+					Rocket Jump
+				</p>
+			</div>
+			<div class="update">
+				Current update: "maybe create?"
+			</div>
+			<div class="button-list">
+				<div class="button" onclick=@( () => CreateServer() )>
+					Create Lobby
+				</div>
+				
+				<div class="button" onclick=@( () => Quit() )>
+					Quit
+				</div>
+			</div>
+		</div>
+
+		<div class="lobby-list">
+			<div class="header">
+				<div class="title">Lobbies</div>
+			</div>
+
+			@if ( IsRefreshing )
+			{
+				<label>Refreshing the lobby list.</label>
+			}
+			else if ( List.Count == 0 )
+			{
+				<label>No lobbies were found.</label>
+			}
+			else
+			{
+				<div class="button-list">
+					@foreach ( var lobby in List )
+					{
+						<div class="button" onclick=@( () => OpenLobby( lobby ) )>
+							<div class="title">
+								@lobby.Name
+							</div>
+
+							<div class="meta">
+								<div class="map">
+									@lobby.Map
+								</div>
+
+								<div class="count">
+									@lobby.Members / @lobby.MaxMembers
+								</div>
+							</div>
+						</div>
+					}
+				</div>
+			}
+		</div>
+	</div>
+</root>
+
+@code
+{
+	/*
+			// Assuming Scene.LoadFromFile() can directly read and interpret the saved file.
+			JsonObject resource = FileSystem.Data.ReadJson<JsonObject>( "scene.json" );
+			Scene.Deserialize(resource);
+	*/
+	private bool IsRefreshing { get; set; }
+	private List<LobbyInformation> List { get; set; } = new();
+	private Leaderboards.Entry[] players { get; set; } = [];
+	private bool saveAvailable = false;
+	private int lastfile = FileSystem.Data.ReadJson<int>( "lastsave" );
+	private int MyValue;
+	
+	protected override void OnFixedUpdate()
+	{
+		
+	}
+	
+	protected override async void OnEnabled()
+	{
+		base.OnEnabled();
+		MyValue = (int)Stats.GetLocalPlayerStats( "skop.sandbox__try_return" ).Get( "entitiescount").Value;
+		var board = Leaderboards.Get( "entitiescount" );
+		await board.Refresh();
+		players = board.Entries;
+		/*
+			FileSystem.Data.WriteJson<JsonObject>( $"scene{lastfile}.json", resource ); 
+			FileSystem.Data.WriteJson<int>( "lastsave", lastfile+1 );
+		*/
+		// Log.Info(players);
+		_ = RefreshLobbyList();
+	}
+
+	protected override void OnUpdate()
+	{
+		
+	}
+
+	
+	protected override int BuildHash() => HashCode.Combine( RealTime.Now );
+	
+	private async Task RefreshLobbyList()
+	{
+		while ( true )
+		{
+			IsRefreshing = true;
+			StateHasChanged();
+
+			List = await Networking.QueryLobbies();
+
+			IsRefreshing = false;
+			StateHasChanged();
+
+			await Task.DelayRealtimeSeconds( 5f );
+		}
+	}
+
+	private void OpenLobby( LobbyInformation lobby )
+	{
+		GameNetworkSystem.Connect( lobby.LobbyId );
+	}
+
+	private void CreateServer()
+	{
+		Game.ActiveScene.LoadFromFile("scenes/minimal.scene");
+	}
+
+	private void Quit()
+	{
+		Game.Close();
+	}
+}

@@ -1,23 +1,32 @@
 {
-  "Title": "Rocket Jump",
+  "Title": "Rocket Jump scene",
   "Type": "game",
   "Org": "skop",
-  "Ident": "rocket_jump",
+  "Ident": "rocket_jump_scene",
   "Tags": null,
   "Schema": 1,
   "HasAssets": true,
   "AssetsPath": "",
   "Resources": null,
-  "MenuResources": null,
   "HasCode": true,
   "CodePath": "/code/",
   "PackageReferences": [],
   "EditorReferences": null,
   "Metadata": {
-    "MinPlayers": 16,
-    "MaxPlayers": 16,
+    "MaxPlayers": 64,
+    "MinPlayers": 1,
     "TickRate": 50,
     "GameNetworkType": "Multiplayer",
-    "CsProjName": ""
+    "MapSelect": "Unrestricted",
+    "MapList": [
+      "facepunch.flatgrass"
+    ],
+    "RankType": "None",
+    "PerMapRanking": false,
+    "LeaderboardType": "None",
+    "CsProjName": "",
+    "StartupScene": "scenes/lobby.scene",
+    "LaunchMode": "Normal",
+    "MapStartupScene": "scenes/minimal.scene"
   }
 }

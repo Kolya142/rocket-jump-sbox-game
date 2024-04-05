@@ -1,0 +1,262 @@
+{
+  "__guid": "9f832399-4887-46b0-8f21-2ee284f538e2",
+  "GameObjects": [
+    {
+      "__guid": "25f5b131-e9b9-4ba4-986f-601010712a7a",
+      "Name": "Map",
+      "Enabled": true,
+      "NetworkMode": 1,
+      "Components": [
+        {
+          "__type": "MapInstance",
+          "__guid": "252cc62e-0382-47e1-bfe9-e6ba6064d5e1",
+          "MapName": "skop.rokjmpdacap",
+          "UseMapFromLaunch": true
+        }
+      ],
+      "Children": []
+    },
+    {
+      "__guid": "6893cb97-5ff7-4734-849d-37b1697ede60",
+      "Name": "Camera",
+      "Position": "-653.944,-293.4251,672.349",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "Components": [
+        {
+          "__type": "CameraComponent",
+          "__guid": "e18b47b5-f64a-47f9-aa03-b7fef31a9813",
+          "BackgroundColor": "0.33333,0.46275,0.52157,1",
+          "ClearFlags": "All",
+          "FieldOfView": 60,
+          "IsMainCamera": true,
+          "Orthographic": false,
+          "OrthographicHeight": 1204,
+          "Priority": 1,
+          "RenderExcludeTags": "viewmodel",
+          "RenderTags": "",
+          "TargetEye": "None",
+          "Viewport": "0,0,1,1",
+          "ZFar": 10000,
+          "ZNear": 10
+        }
+      ],
+      "Children": [
+        {
+          "__guid": "3edf394e-e78f-4221-8983-4193f014e708",
+          "Name": "ViewModel Camera",
+          "Position": "0,0,0",
+          "Enabled": true,
+          "NetworkMode": 2,
+          "Components": [
+            {
+              "__type": "CameraComponent",
+              "__guid": "7bbec55f-6711-428c-8ddc-567e55ff48c1",
+              "BackgroundColor": "0.33333,0.46275,0.52157,1",
+              "ClearFlags": "Depth, Stencil",
+              "FieldOfView": 95.2,
+              "IsMainCamera": false,
+              "Orthographic": false,
+              "OrthographicHeight": 1204,
+              "Priority": 1,
+              "RenderExcludeTags": "",
+              "RenderTags": "viewmodel,light",
+              "TargetEye": "None",
+              "Viewport": "0,0,1,1",
+              "ZFar": 10000,
+              "ZNear": 10
+            },
+            {
+              "__type": "Keep",
+              "__guid": "f7de01c0-5fa8-4007-be3e-930a26f4b95c"
+            }
+          ],
+          "Children": [
+            {
+              "__guid": "a0eeaebc-ccb8-4fb9-a676-588773545be9",
+              "Name": "ViewModel",
+              "Position": "0,0,0",
+              "Tags": "viewmodel",
+              "Enabled": true,
+              "NetworkMode": 2,
+              "Components": [
+                {
+                  "__type": "SkinnedModelRenderer",
+                  "__guid": "2a12401c-3870-4a92-94c1-db1866ba041a",
+                  "AnimationGraph": "weapons/rust_pistol/v_rust_pistol.vanmgrph",
+                  "BodyGroups": 18446744073709551615,
+                  "CreateBoneObjects": false,
+                  "Model": "weapons/rust_pistol/v_rust_pistol.vmdl",
+                  "RenderType": "On",
+                  "Tint": "1,1,1,1"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "__guid": "42300190-f531-45df-9dcc-7dad3e73c669",
+      "Name": "Networking",
+      "Position": "-570.3022,-149.7037,586.5067",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "Components": [
+        {
+          "__type": "NetworkHelper",
+          "__guid": "c4c0fb28-6fb5-49ef-b5b5-b7eb583643c0",
+          "PlayerPrefab": {
+            "_type": "gameobject",
+            "prefab": "prefab/player.prefab"
+          },
+          "SpawnPoints": [
+            {
+              "_type": "gameobject",
+              "go": "42300190-f531-45df-9dcc-7dad3e73c669"
+            }
+          ],
+          "StartServer": true
+        }
+      ]
+    },
+    {
+      "__guid": "cad4ed66-8e45-4069-9b99-8dd22bb0b539",
+      "Name": "Cube",
+      "Position": "-338.0612,-214.8702,578.5097",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "Components": [
+        {
+          "__type": "Prop",
+          "__guid": "15d2559a-2ff0-424e-8a2d-00431470cec9",
+          "BodyGroups": 18446744073709551615,
+          "Health": 15,
+          "IsStatic": false,
+          "MaterialGroup": "default",
+          "Model": "models/sbox_props/cardboard_box/cardboard_box.vmdl"
+        }
+      ]
+    },
+    {
+      "__guid": "35803732-e03e-4031-9073-e407ef5a89b7",
+      "Name": "Cube (1)",
+      "Position": "-338.0612,-214.8702,603.4572",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "Components": [
+        {
+          "__type": "Prop",
+          "__guid": "24ab9233-5479-496e-b5fd-3138924a1dec",
+          "BodyGroups": 18446744073709551615,
+          "Health": 15,
+          "IsStatic": false,
+          "MaterialGroup": "default",
+          "Model": "models/sbox_props/cardboard_box/cardboard_box.vmdl"
+        }
+      ]
+    },
+    {
+      "__guid": "88ea7df4-ddaa-4de3-8fcf-4ab8f21dd8a5",
+      "Name": "Cube (2)",
+      "Position": "-338.0612,-214.8702,630.0391",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "Components": [
+        {
+          "__type": "Prop",
+          "__guid": "04365177-73e0-4693-8068-83b3d35f778f",
+          "BodyGroups": 18446744073709551615,
+          "Health": 15,
+          "IsStatic": false,
+          "MaterialGroup": "default",
+          "Model": "models/sbox_props/cardboard_box/cardboard_box.vmdl"
+        }
+      ]
+    },
+    {
+      "__guid": "91300c9e-8114-4130-817e-506eab3cb4db",
+      "Name": "Cube (3)",
+      "Position": "-338.0612,-214.8702,657.3655",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "Components": [
+        {
+          "__type": "Prop",
+          "__guid": "c660bdef-3afb-4057-9c27-8dfbdc6294d4",
+          "BodyGroups": 18446744073709551615,
+          "Health": 15,
+          "IsStatic": false,
+          "MaterialGroup": "default",
+          "Model": "models/sbox_props/cardboard_box/cardboard_box.vmdl"
+        }
+      ]
+    },
+    {
+      "__guid": "ad33ec6b-0b35-4a03-809c-2bdec5476d54",
+      "Name": "Decal",
+      "Position": "0.980174,17.81051,66.00007",
+      "Rotation": "0,0.7071068,0,0.7071068",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "__Prefab": "prefab/decal_bullet_default.prefab"
+    },
+    {
+      "__guid": "27682a5c-5aba-42f8-b72c-db68f5dbb38b",
+      "Name": "Decal (1)",
+      "Position": "6.116638,46.75825,66.00007",
+      "Rotation": "0,0.7071068,0,0.7071068",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "__Prefab": "prefab/decal_bullet_default.prefab"
+    },
+    {
+      "__guid": "51e43255-5279-4afc-8bff-8ea597f80e10",
+      "Name": "Decal (2)",
+      "Position": "-10.34937,33.02576,66.00007",
+      "Rotation": "0,0.7071068,0,0.7071068",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "__Prefab": "prefab/decal_bullet_default.prefab"
+    },
+    {
+      "__guid": "8147af16-e600-4a7b-83bc-ef0d8470bf44",
+      "Name": "Decal (3)",
+      "Position": "9.161365,31.81449,66.00007",
+      "Rotation": "0,0.7071068,0,0.7071068",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "__Prefab": "prefab/decal_bullet_default.prefab"
+    }
+  ],
+  "SceneProperties": {
+    "FixedUpdateFrequency": 50,
+    "Lerping": true,
+    "MaxFixedUpdates": 5,
+    "NetworkFrequency": 60,
+    "ThreadedAnimation": true,
+    "TimeScale": 1,
+    "UseFixedUpdate": true,
+    "NavMesh": {
+      "Enabled": false,
+      "IncludeStaticBodies": true,
+      "IncludeKeyframedBodies": true,
+      "EditorAutoUpdate": true,
+      "AgentHeight": 64,
+      "AgentRadius": 16,
+      "AgentStepSize": 18,
+      "AgentMaxSlope": 40,
+      "ExcludedBodies": "",
+      "IncludedBodies": ""
+    }
+  },
+  "Title": "minimal",
+  "Description": "",
+  "LastSaved": "2024-04-05T20:38:15.5377006\u002B03:00",
+  "ResourceVersion": 1,
+  "__version": 1,
+  "__references": [
+    "facepunch.cardboard_box",
+    "rust.v_rust_pistol"
+  ]
+}
