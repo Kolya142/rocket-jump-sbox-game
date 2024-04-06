@@ -69,6 +69,11 @@ public sealed class PlayerController : Component
 			return;
 		}
 
+		if ( tr.Body is not null )
+		{
+			tr.Body.ApplyImpulseAt( tr.HitPosition, tr.Direction * 1000.0f * tr.Body.Mass.Clamp( 0, 1000 ) );
+		}
+
 		var damage = new DamageInfo( 10f, GameObject, GameObject, tr.Hitbox );
 		if ( DecalEffect is not null )
 		{
