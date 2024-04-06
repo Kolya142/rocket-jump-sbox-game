@@ -1,10 +1,14 @@
-using Sandbox;
+﻿using Sandbox;
 using Sandbox.Citizen;
+using Sandbox.Services;
+using static Sandbox.Component;
 
 [Group( "Walker" )]
 [Title( "Walker - Player Controller" )]
-public sealed class PlayerController : Component
+public sealed class PlayerController : Component, IDamageable
 {
+	public static PlayerController Local => Game.ActiveScene.Components.GetAll<PlayerController>( FindMode.EnabledInSelfAndDescendants ).ToList().FirstOrDefault( x => x.Network.OwnerConnection.SteamId == (ulong)Game.SteamId );
+
 	[Property] public CharacterController CharacterController { get; set; }
 	[Property] public float CrouchMoveSpeed { get; set; } = 64.0f;
 	[Property] public float WalkMoveSpeed { get; set; } = 190.0f;
@@ -23,6 +27,7 @@ public sealed class PlayerController : Component
 	[Sync] public Vector3 WishVelocity { get; set; }
 
 	public bool WishCrouch;
+	[Sync, Property] public float Health { get; set; } = 100;
 	public float EyeHeight = 64;
 	SoundEvent shootSound = Cloud.SoundEvent( "mdlresrc.toolgunshoot" );
 	TimeSince timeSinceShoot;
@@ -84,9 +89,20 @@ public sealed class PlayerController : Component
 		damage.Position = tr.HitPosition;
 		damage.Shape = tr.Shape;
 
-		foreach ( var damageable in tr.GameObject.Components.GetAll<IDamageable>() )
+		foreach( Component damageable in tr.GameObject.Components.GetAll<IDamageable>() )
 		{
-			damageable.OnDamage( damage );
+			if (damageable.Components.Get<PlayerController>() != null && !IsProxy)
+			{
+				Stats.Increment( "hitpl", 1 );
+				if ( damageable.Components.Get<PlayerController>().Health - 10 <= 0 )
+				{
+					Stats.Increment( "kill", 1 );
+				}
+			}
+			if ( (damageable as IDamageable) != null )
+			{
+				(damageable as IDamageable).OnDamage( damage );
+			}
 		}
 	}
 
@@ -106,6 +122,7 @@ public sealed class PlayerController : Component
 
 	protected override void OnUpdate()
 	{
+		Health = (Health + 1 * Time.Delta).Clamp( 0, 100 );
 		if ( !IsProxy )
 		{
 			MouseInput();
@@ -378,4 +395,36 @@ public sealed class PlayerController : Component
 		}
 	}
 
+	[Broadcast]
+	private void MinusHealth( float value )
+	{
+		Health -= value;
+	}
+
+	[Broadcast]
+	private void ResetHealth()
+	{
+		Health = 100;
+	}
+
+	public void OnDamage( in DamageInfo damage )
+	{
+		MinusHealth( damage.Damage );
+		if ( Health <= 1 )
+		{
+			Respawn();
+			ResetHealth();
+			SayAboutMyDie(damage);
+		}
+	}
+
+	void SayAboutMyDie( in DamageInfo damage )
+	{
+		Stats.Increment( "deth", 1 );
+		Hud hud = Game.ActiveScene.Components.GetInChildrenOrSelf<Hud>();
+		if ( hud != null )
+		{
+			hud.SendText( "system", $"{damage.Attacker.Network.OwnerConnection.DisplayName} ☠ {Network.OwnerConnection.DisplayName}" );
+		}
+	}
 }

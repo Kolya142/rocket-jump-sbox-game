@@ -13,6 +13,7 @@
 			</div>
 		}
 	</div>
+	<div class="hp">@PlayerController.Local.Health</div>
 	<TextEntry @ref="InputBox" onsubmit="@ChatFinished"></TextEntry>
 </root>
 
@@ -50,7 +51,7 @@
 	}
 
 	[Broadcast]
-	private void SendText(string author, string message)
+	public void SendText(string author, string message)
 	{
 		AddTextLocal(author, message);
 	}

@@ -34,4 +34,10 @@ Hud {
 		left: 0;
 		color: white;
 	}
+
+	.hp {
+		color: red;
+		position: absolute;
+		top: 90%;
+	}
 }
