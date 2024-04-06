@@ -8,7 +8,7 @@ public sealed class PlayerController : Component
 	[Property] public CharacterController CharacterController { get; set; }
 	[Property] public float CrouchMoveSpeed { get; set; } = 64.0f;
 	[Property] public float WalkMoveSpeed { get; set; } = 190.0f;
-	public float JumpForce = 800f;
+	public float JumpForce => 800f;
 	[Property] public float RunMoveSpeed { get; set; } = 190.0f;
 	[Property] public float SprintMoveSpeed { get; set; } = 320.0f;
 	[Property] public GameObject DecalEffect { get; set; }
@@ -30,7 +30,11 @@ public sealed class PlayerController : Component
 	private void Respawn()
 	{
 		List<SpawnPoint> spawnPoints = Game.ActiveScene.Components.GetAll<SpawnPoint>( FindMode.EnabledInSelfAndDescendants ).ToList();
-		SpawnPoint spawnPoint = spawnPoints[Game.Random.Next( spawnPoints.Count )];
+		int index = Game.Random.Next( spawnPoints.Count );
+		//Log.Info( spawnPoints );
+		//Log.Info( spawnPoints.Count );
+		//Log.Info( index );
+		SpawnPoint spawnPoint = spawnPoints[index];
 		Transform.Position = spawnPoint.Transform.Position;
 	}
 
@@ -42,8 +46,7 @@ public sealed class PlayerController : Component
 	[Broadcast]
 	private void ShootAnim()
 	{
-		if ( IsProxy )
-			AnimationHelper.Target.Set( "b_attack", true );
+		AnimationHelper.Target.Set( "b_attack", true );
 	}
 
 	private void Shoot()
@@ -70,6 +73,7 @@ public sealed class PlayerController : Component
 		if ( DecalEffect is not null )
 		{
 			var decal = DecalEffect.Clone( new Transform( tr.HitPosition + tr.Normal * 2.0f, Rotation.LookAt( -tr.Normal, Vector3.Random ), Game.Random.Float( 0.8f, 1.2f ) ) );
+			decal.Components.Create<SelfDestroyComponent>().time = 20f;
 			decal.SetParent( tr.GameObject );
 		}
 		damage.Position = tr.HitPosition;
@@ -88,6 +92,7 @@ public sealed class PlayerController : Component
 				.Run();
 		if ( !tr.Hit ) 
 			return;
+		Sandbox.Services.Stats.Increment( "jumps", 1 );
 		CharacterController.IsOnGround = false;
 		float r = JumpForce;
 		

@@ -37,7 +37,7 @@
           "RenderTags": "",
           "TargetEye": "None",
           "Viewport": "0,0,1,1",
-          "ZFar": 10000,
+          "ZFar": 50000,
           "ZNear": 10
         }
       ],
@@ -227,6 +227,27 @@
       "Enabled": true,
       "NetworkMode": 2,
       "__Prefab": "prefab/decal_bullet_default.prefab"
+    },
+    {
+      "__guid": "95dd59ab-be68-4231-b1fd-f98add9c6823",
+      "Name": "Screen",
+      "Position": "305.8209,134.4617,1114.157",
+      "Enabled": true,
+      "NetworkMode": 1,
+      "Components": [
+        {
+          "__type": "ScreenPanel",
+          "__guid": "b6304499-4755-4205-9212-1ae640e08ec8",
+          "AutoScreenScale": true,
+          "Opacity": 1,
+          "Scale": 1,
+          "ZIndex": 100
+        },
+        {
+          "__type": "Hud",
+          "__guid": "6c51cb21-cd9b-448d-b953-6ca159d71ec9"
+        }
+      ]
     }
   ],
   "SceneProperties": {
@@ -252,7 +273,7 @@
   },
   "Title": "minimal",
   "Description": "",
-  "LastSaved": "2024-04-05T20:38:15.5377006\u002B03:00",
+  "LastSaved": "2024-04-06T12:47:18.6268452\u002B03:00",
   "ResourceVersion": 1,
   "__version": 1,
   "__references": [

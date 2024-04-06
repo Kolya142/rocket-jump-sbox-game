@@ -37,11 +37,14 @@
 				</p>
 			</div>
 			<div class="update">
-				Current update: "maybe create?"
+				Current update: "chatbox; voice chat; fix somefings; don't fix 1 problem, idk how fix; TOO BIG TEXT"
 			</div>
 			<div class="button-list">
 				<div class="button" onclick=@( () => CreateServer() )>
 					Create Lobby
+				</div>
+				<div class="button" onclick=@( () => CreateTestServer() )>
+					text
 				</div>
 				
 				<div class="button" onclick=@( () => Quit() )>
@@ -112,8 +115,8 @@
 	protected override async void OnEnabled()
 	{
 		base.OnEnabled();
-		MyValue = (int)Stats.GetLocalPlayerStats( "skop.sandbox__try_return" ).Get( "entitiescount").Value;
-		var board = Leaderboards.Get( "entitiescount" );
+		MyValue = (int)Stats.GetLocalPlayerStats("skop.rocket_jump_scene").Get("jumps").Value;
+		var board = Leaderboards.Get("jumps");
 		await board.Refresh();
 		players = board.Entries;
 		/*
@@ -156,6 +159,11 @@
 	private void CreateServer()
 	{
 		Game.ActiveScene.LoadFromFile("scenes/minimal.scene");
+	}
+
+	private void CreateTestServer()
+	{
+		Game.ActiveScene.LoadFromFile("scenes/test.scene");
 	}
 
 	private void Quit()

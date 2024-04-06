@@ -1,15 +1,13 @@
 {
   "RootObject": {
-    "__guid": "fa7f3a74-d222-433b-a9cb-8f697b79c248",
-    "Name": "Decal",
-    "Position": "-0.00001036157,0,67.38548",
-    "Rotation": "0,0.7071068,0,0.7071068",
+    "__guid": "eee4641a-ccca-4021-9c3b-9ec44f19b796",
+    "Name": "decal_bullet_default",
     "Enabled": true,
     "NetworkMode": 2,
     "Components": [
       {
         "__type": "DecalRenderer",
-        "__guid": "1e3ea4d3-b6e0-47a8-9147-73840f698562",
+        "__guid": "93979aa2-b3cb-40b3-a577-2c3c54ca774b",
         "CutoffAngle": 60,
         "CutoffAngleSoftness": 5,
         "Material": "materials/decals/bullethole.vmat",
@@ -18,7 +16,8 @@
         "TintColor": "1,1,1,1",
         "TriPlanar": false
       }
-    ]
+    ],
+    "Children": []
   },
   "ShowInMenu": false,
   "MenuPath": null,

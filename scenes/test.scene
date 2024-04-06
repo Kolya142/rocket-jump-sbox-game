@@ -1,0 +1,174 @@
+{
+  "__guid": "761ca607-4d60-46ac-8b42-3e5c46969e50",
+  "GameObjects": [
+    {
+      "__guid": "179da74f-41c1-423a-b048-f3b1faa046d5",
+      "Name": "Map",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "Components": [
+        {
+          "__type": "MapInstance",
+          "__guid": "812dbd79-1448-4d59-9c62-c50545eb6c96",
+          "MapName": "facepunch/construct",
+          "UseMapFromLaunch": false
+        }
+      ],
+      "Children": []
+    },
+    {
+      "__guid": "d05f44aa-2b8d-42b4-8ad6-30734f8faf36",
+      "Name": "Camera",
+      "Position": "-653.944,-293.4251,672.349",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "Components": [
+        {
+          "__type": "CameraComponent",
+          "__guid": "9b544d08-48ff-4b60-9a21-e56e63f79c5f",
+          "BackgroundColor": "0.33333,0.46275,0.52157,1",
+          "ClearFlags": "All",
+          "FieldOfView": 60,
+          "IsMainCamera": true,
+          "Orthographic": false,
+          "OrthographicHeight": 1204,
+          "Priority": 1,
+          "RenderExcludeTags": "viewmodel",
+          "RenderTags": "",
+          "TargetEye": "None",
+          "Viewport": "0,0,1,1",
+          "ZFar": 50000,
+          "ZNear": 10
+        }
+      ],
+      "Children": [
+        {
+          "__guid": "617732d6-d5e4-4960-b09c-ce183e14eb52",
+          "Name": "ViewModel Camera",
+          "Position": "0,0,0",
+          "Enabled": true,
+          "NetworkMode": 2,
+          "Components": [
+            {
+              "__type": "CameraComponent",
+              "__guid": "4d103841-aeeb-4301-9926-99731e117205",
+              "BackgroundColor": "0.33333,0.46275,0.52157,1",
+              "ClearFlags": "Depth, Stencil",
+              "FieldOfView": 95.2,
+              "IsMainCamera": false,
+              "Orthographic": false,
+              "OrthographicHeight": 1204,
+              "Priority": 1,
+              "RenderExcludeTags": "",
+              "RenderTags": "viewmodel,light",
+              "TargetEye": "None",
+              "Viewport": "0,0,1,1",
+              "ZFar": 10000,
+              "ZNear": 10
+            },
+            {
+              "__type": "Keep",
+              "__guid": "a49557a8-1a5a-4844-b734-618d62e670e2"
+            }
+          ],
+          "Children": [
+            {
+              "__guid": "fefdcf59-cde8-4e48-acf7-b402120d2dfa",
+              "Name": "ViewModel",
+              "Position": "0,0,0",
+              "Tags": "viewmodel",
+              "Enabled": true,
+              "NetworkMode": 2,
+              "Components": [
+                {
+                  "__type": "SkinnedModelRenderer",
+                  "__guid": "29a17ef6-75b9-471c-9521-73a521e882a3",
+                  "AnimationGraph": "weapons/rust_pistol/v_rust_pistol.vanmgrph",
+                  "BodyGroups": 18446744073709551615,
+                  "CreateBoneObjects": false,
+                  "Model": "weapons/rust_pistol/v_rust_pistol.vmdl",
+                  "RenderType": "On",
+                  "Tint": "1,1,1,1"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "__guid": "1e9bb517-5613-4d3b-b3d5-7ee1adf86be7",
+      "Name": "Screen",
+      "Position": "305.8209,134.4617,1114.157",
+      "Enabled": true,
+      "NetworkMode": 1,
+      "Components": [
+        {
+          "__type": "ScreenPanel",
+          "__guid": "ef2bedc2-1dd4-4793-a78d-46df51095352",
+          "AutoScreenScale": true,
+          "Opacity": 1,
+          "Scale": 1,
+          "ZIndex": 100
+        },
+        {
+          "__type": "Hud",
+          "__guid": "b55be174-3b5c-44c7-8669-4471449e882d"
+        }
+      ]
+    },
+    {
+      "__guid": "2b8376be-a116-46af-829c-e07c66e1afd2",
+      "Name": "Networking",
+      "Position": "-570.3022,-149.7037,586.5067",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "Components": [
+        {
+          "__type": "NetworkHelper",
+          "__guid": "e98292fe-a779-4642-a88a-644a66df7fbb",
+          "PlayerPrefab": {
+            "_type": "gameobject",
+            "prefab": "prefab/player.prefab"
+          },
+          "SpawnPoints": [
+            {
+              "_type": "gameobject",
+              "go": "2b8376be-a116-46af-829c-e07c66e1afd2"
+            }
+          ],
+          "StartServer": true
+        }
+      ]
+    }
+  ],
+  "SceneProperties": {
+    "FixedUpdateFrequency": 50,
+    "Lerping": true,
+    "MaxFixedUpdates": 5,
+    "NetworkFrequency": 30,
+    "ThreadedAnimation": true,
+    "TimeScale": 1,
+    "UseFixedUpdate": true,
+    "NavMesh": {
+      "Enabled": false,
+      "IncludeStaticBodies": true,
+      "IncludeKeyframedBodies": true,
+      "EditorAutoUpdate": true,
+      "AgentHeight": 64,
+      "AgentRadius": 16,
+      "AgentStepSize": 18,
+      "AgentMaxSlope": 40,
+      "ExcludedBodies": "",
+      "IncludedBodies": ""
+    }
+  },
+  "Title": "test",
+  "Description": "",
+  "LastSaved": "2024-04-06T12:59:04.0125397\u002B03:00",
+  "ResourceVersion": 1,
+  "__version": 1,
+  "__references": [
+    "rust.v_rust_pistol"
+  ]
+}
