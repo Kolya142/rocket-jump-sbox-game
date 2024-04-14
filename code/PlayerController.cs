@@ -147,7 +147,17 @@ public sealed class PlayerController : Component, IDamageable
 			}
 			if (Input.Pressed("reload"))
 			{
-				Respawn();
+				if (mode == 1) {
+					if ( CharacterController.Velocity.z <= -1000 ) {
+						if ( !Scene.Trace.Ray( Transform.Position, Transform.Position + Vector3.Down * 5000.0f ).IgnoreGameObject( GameObject ).Run().Hit ) {
+							Respawn(); 
+						} 
+					}
+				}
+				else
+				{
+					Respawn();
+				}
 			}
 		}
 		var tr = Scene.Trace.Ray( Transform.Position + Vector3.Up * EyeHeight, Transform.Position + Vector3.Up * EyeHeight + EyeAngles.Forward * 500.0f )
