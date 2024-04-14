@@ -181,6 +181,7 @@ public sealed class PlayerController : Component, IDamageable
 		get
 		{
 			if ( Crouching ) return CrouchMoveSpeed;
+			if ( mode == 1 ) return SprintMoveSpeed * (Input.Down( "run" ) ? 1.5f : 1.0f);
 			if ( Input.Down( "run" ) ) return SprintMoveSpeed;
 			if ( Input.Down( "walk" ) ) return WalkMoveSpeed;
 
