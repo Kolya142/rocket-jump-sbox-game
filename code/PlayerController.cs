@@ -33,6 +33,7 @@ public sealed class PlayerController : Component, IDamageable
 	SoundEvent shootSound = Cloud.SoundEvent( "mdlresrc.toolgunshoot" );
 	TimeSince timeSinceShoot;
 
+	[Broadcast]
 	private void Respawn()
 	{
 		List<SpawnPoint> spawnPoints = Game.ActiveScene.Components.GetAll<SpawnPoint>( FindMode.EnabledInSelfAndDescendants ).ToList();
@@ -79,8 +80,12 @@ public sealed class PlayerController : Component, IDamageable
 		{
 			tr.Body.ApplyImpulseAt( tr.HitPosition, tr.Direction * 1000.0f * tr.Body.Mass.Clamp( 0, 1000 ) );
 		}
-
-		var damage = new DamageInfo( 10f, GameObject, GameObject, tr.Hitbox );
+		float damage_force = 10f;
+		if (mode == 1)
+		{
+			damage_force = Game.Random.Float( 14f, 25f );
+		}
+		var damage = new DamageInfo( damage_force, GameObject, GameObject, tr.Hitbox );
 		if ( DecalEffect is not null )
 		{
 			var decal = DecalEffect.Clone( new Transform( tr.HitPosition + tr.Normal * 2.0f, Rotation.LookAt( -tr.Normal, Vector3.Random ), Game.Random.Float( 0.8f, 1.2f ) ) );
@@ -96,7 +101,7 @@ public sealed class PlayerController : Component, IDamageable
 			if (damageable.Components.Get<PlayerController>() != null && !IsProxy)
 			{
 				Stats.Increment( "hitpl", 1 );
-				if ( damageable.Components.Get<PlayerController>().Health - 10 <= 0 )
+				if ( damageable.Components.Get<PlayerController>().Health - damage_force <= 0 )
 				{
 					Stats.Increment( "kill", 1 );
 				}
@@ -118,6 +123,10 @@ public sealed class PlayerController : Component, IDamageable
 		Sandbox.Services.Stats.Increment( "jumps", 1 );
 		CharacterController.IsOnGround = false;
 		float r = JumpForce;
+		if (mode == 1)
+		{
+			r *= 1.5f;
+		}
 		
 		CharacterController.Velocity += -EyeAngles.Forward * r;
 	}

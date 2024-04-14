@@ -18,10 +18,10 @@ public sealed class Gun : Component
 		if ( !IsProxy ) 
 			WeaponObject.Components.Get<ModelRenderer>().RenderType = ModelRenderer.ShadowRenderType.ShadowsOnly;
 		WeaponObject.Parent = handR;
+		isProxe = IsProxy;
 	}
 	protected override void OnPreRender()
 	{
-		isProxe = IsProxy;
 		// Log.Info( WeaponObject );
 		WeaponObject.Transform.Position = handR.Transform.Position;
 		WeaponObject.Transform.Rotation = handR.Transform.Rotation;
