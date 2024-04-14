@@ -85,6 +85,7 @@ public sealed class PlayerController : Component, IDamageable
 			var decal = DecalEffect.Clone( new Transform( tr.HitPosition + tr.Normal * 2.0f, Rotation.LookAt( -tr.Normal, Vector3.Random ), Game.Random.Float( 0.8f, 1.2f ) ) );
 			decal.Components.Create<SelfDestroyComponent>().time = 20f;
 			decal.SetParent( tr.GameObject );
+			decal.NetworkSpawn();
 		}
 		damage.Position = tr.HitPosition;
 		damage.Shape = tr.Shape;
