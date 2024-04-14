@@ -27,6 +27,7 @@ public sealed class PlayerController : Component, IDamageable
 	[Sync] public Vector3 WishVelocity { get; set; }
 
 	public bool WishCrouch;
+	public int mode;
 	[Sync, Property] public float Health { get; set; } = 100;
 	public float EyeHeight = 64;
 	SoundEvent shootSound = Cloud.SoundEvent( "mdlresrc.toolgunshoot" );
