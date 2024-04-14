@@ -8,7 +8,7 @@
       "NetworkMode": 1,
       "Components": [
         {
-          "__type": "MapInstance",
+          "__type": "Sandbox.MapInstance",
           "__guid": "252cc62e-0382-47e1-bfe9-e6ba6064d5e1",
           "MapName": "skop.rokjmpdacap",
           "UseMapFromLaunch": true
@@ -24,7 +24,7 @@
       "NetworkMode": 2,
       "Components": [
         {
-          "__type": "CameraComponent",
+          "__type": "Sandbox.CameraComponent",
           "__guid": "e18b47b5-f64a-47f9-aa03-b7fef31a9813",
           "BackgroundColor": "0.33333,0.46275,0.52157,1",
           "ClearFlags": "All",
@@ -50,7 +50,7 @@
           "NetworkMode": 2,
           "Components": [
             {
-              "__type": "CameraComponent",
+              "__type": "Sandbox.CameraComponent",
               "__guid": "7bbec55f-6711-428c-8ddc-567e55ff48c1",
               "BackgroundColor": "0.33333,0.46275,0.52157,1",
               "ClearFlags": "Depth, Stencil",
@@ -81,7 +81,7 @@
               "NetworkMode": 2,
               "Components": [
                 {
-                  "__type": "SkinnedModelRenderer",
+                  "__type": "Sandbox.SkinnedModelRenderer",
                   "__guid": "2a12401c-3870-4a92-94c1-db1866ba041a",
                   "AnimationGraph": "weapons/rust_pistol/v_rust_pistol.vanmgrph",
                   "BodyGroups": 18446744073709551615,
@@ -104,7 +104,7 @@
       "NetworkMode": 2,
       "Components": [
         {
-          "__type": "NetworkHelper",
+          "__type": "Sandbox.NetworkHelper",
           "__guid": "c4c0fb28-6fb5-49ef-b5b5-b7eb583643c0",
           "PlayerPrefab": {
             "_type": "gameobject",
@@ -128,7 +128,7 @@
       "NetworkMode": 2,
       "Components": [
         {
-          "__type": "Prop",
+          "__type": "Sandbox.Prop",
           "__guid": "15d2559a-2ff0-424e-8a2d-00431470cec9",
           "BodyGroups": 18446744073709551615,
           "Health": 15,
@@ -146,7 +146,7 @@
       "NetworkMode": 2,
       "Components": [
         {
-          "__type": "Prop",
+          "__type": "Sandbox.Prop",
           "__guid": "24ab9233-5479-496e-b5fd-3138924a1dec",
           "BodyGroups": 18446744073709551615,
           "Health": 15,
@@ -164,7 +164,7 @@
       "NetworkMode": 2,
       "Components": [
         {
-          "__type": "Prop",
+          "__type": "Sandbox.Prop",
           "__guid": "04365177-73e0-4693-8068-83b3d35f778f",
           "BodyGroups": 18446744073709551615,
           "Health": 15,
@@ -182,7 +182,7 @@
       "NetworkMode": 2,
       "Components": [
         {
-          "__type": "Prop",
+          "__type": "Sandbox.Prop",
           "__guid": "c660bdef-3afb-4057-9c27-8dfbdc6294d4",
           "BodyGroups": 18446744073709551615,
           "Health": 15,
@@ -236,7 +236,7 @@
       "NetworkMode": 1,
       "Components": [
         {
-          "__type": "ScreenPanel",
+          "__type": "Sandbox.ScreenPanel",
           "__guid": "b6304499-4755-4205-9212-1ae640e08ec8",
           "AutoScreenScale": true,
           "Opacity": 1,
@@ -273,7 +273,7 @@
   },
   "Title": "minimal",
   "Description": "",
-  "LastSaved": "2024-04-06T12:47:18.6268452\u002B03:00",
+  "LastSaved": "2024-04-14T17:15:38.5193032\u002B03:00",
   "ResourceVersion": 1,
   "__version": 1,
   "__references": [

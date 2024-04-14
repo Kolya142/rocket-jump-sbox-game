@@ -36,8 +36,16 @@ Hud {
 	}
 
 	.hp {
-		color: red;
+		color: black;
 		position: absolute;
-		top: 90%;
+		top: 5%;
+		font-size: 50px;
+	}
+
+	.pr {
+		color: black;
+		position: absolute;
+		top: 0%;
+		font-size: 50px;
 	}
 }
