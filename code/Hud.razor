@@ -14,7 +14,7 @@
 		}
 	</div>
 	<div class="hp">@PlayerController.Local.Health</div>
-	<div class="pr">Press r to respawn</div>
+	<div class="pr">Press r to respawn @(Connection.Local.IsHost ? "Press m to next mode" : "")</div>
 	<div class="state">Mode: Default</div>
 	<TextEntry @ref="InputBox" onsubmit="@ChatFinished"></TextEntry>
 </root>
