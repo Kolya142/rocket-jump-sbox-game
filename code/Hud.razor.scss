@@ -38,14 +38,21 @@ Hud {
 	.hp {
 		color: black;
 		position: absolute;
-		top: 5%;
+		top: 100px;
 		font-size: 50px;
 	}
 
 	.pr {
 		color: black;
 		position: absolute;
-		top: 0%;
+		top: 50px;
+		font-size: 50px;
+	}
+
+	.state {
+		color: black;
+		position: absolute;
+		top: 0;
 		font-size: 50px;
 	}
 }

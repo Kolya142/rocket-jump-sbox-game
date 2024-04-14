@@ -14,8 +14,8 @@
 		}
 	</div>
 	<div class="hp">@PlayerController.Local.Health</div>
-	<div class="pr">Press r to respawn @(Connection.Local.IsHost ? "Press m to next mode" : "")</div>
-	<div class="state">Mode: Default</div>
+	<div class="pr">Press r to respawn@(Connection.Local.IsHost ? ", Press m to next mode" : "")</div>
+	<div class="state">Mode: @(mode == 0 ? "Default" : "Pvp")</div>
 	<TextEntry @ref="InputBox" onsubmit="@ChatFinished"></TextEntry>
 </root>
 
@@ -23,6 +23,7 @@
 {
 	public record Entry(string author, string message, RealTimeSince timeSinceAdded); 
 	private TextEntry InputBox { get; set; }
+	[Sync] private int mode { get; set; } = 0;
 	private List<Entry> Entries { get; set; } = new(); 
 	protected override void OnUpdate()
 	{
@@ -38,6 +39,14 @@
 			Entries.RemoveAll(x => x.timeSinceAdded > 30f);
 
 			SetClass("open", InputBox.HasFocus);
+		}
+		if (Connection.Local.IsHost)
+		{
+			if (Input.Pressed("next"))
+			{
+				mode++;
+			}
+			mode = mode % 2;
 		}
 	}
 
